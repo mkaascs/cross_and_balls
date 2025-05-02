@@ -5,8 +5,8 @@ typedef struct {
     unsigned int window_width;
     unsigned int window_height;
     unsigned int cell_size;
-} WindowConfig;
+} WindowSize;
 
-void init_config(WindowConfig* config);
+WindowSize* init_window_size();
 
 #endif //CONFIG_H

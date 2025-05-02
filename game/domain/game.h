@@ -9,16 +9,15 @@ typedef enum {
     Ball, Cross
 } Player;
 
-typedef struct {
+typedef struct Game {
     Player lastMove;
     uint16_t ballsMoves;
     uint16_t crossesMoves;
 
-    bool (*check_win)();
-    bool (*make_move)(int position);
+    bool (*check_win)(struct Game* this);
+    bool (*make_move)(struct Game* this, int position);
 } Game;
 
-
-void run_game(Game*);
+Game* init_game();
 
 #endif //GAME_H

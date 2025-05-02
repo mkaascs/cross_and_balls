@@ -10,12 +10,13 @@ set(SDL2_LIBRARY "${SDL2_PATH}/lib/libSDL2.dylib")
 include_directories(${SDL2_INCLUDE_DIR})
 
 add_executable(cross_ball main.c
-        game/game.c
-        game/game.h
-        game/views/board_view.h
-        game/config/config.h
-        game/config/config.c
-        game/views/symbols_view.h
-        game/views/board_view.c)
+        game/domain/game.c
+        game/domain/game.h
+        game/views/window/size.h
+        game/views/window/size.c
+        game/controllers/controllers.h
+        game/views/views.h
+        game/views/views.c
+        game/controllers/controllers.c)
 
 target_link_libraries(cross_ball ${SDL2_LIBRARY})
