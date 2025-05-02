@@ -14,9 +14,10 @@ typedef struct {
     uint16_t ballsMoves;
     uint16_t crossesMoves;
 
-    bool (*checkWin)();
-    bool (*makeMove)(int position);
+    bool (*check_win)();
+    bool (*make_move)(int position);
 } Game;
+
 
 void run_game(Game*);
 

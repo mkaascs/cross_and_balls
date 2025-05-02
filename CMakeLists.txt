@@ -11,6 +11,11 @@ include_directories(${SDL2_INCLUDE_DIR})
 
 add_executable(cross_ball main.c
         game/game.c
-        game/game.h)
+        game/game.h
+        game/views/board_view.h
+        game/config/config.h
+        game/config/config.c
+        game/views/symbols_view.h
+        game/views/board_view.c)
 
 target_link_libraries(cross_ball ${SDL2_LIBRARY})

@@ -9,7 +9,7 @@ const uint16_t WIN_PATTERNS[WIN_PATTERNS_COUNT] = {
     0b100010001, 0b001010100
 };
 
-bool checkWin() {
+bool check_win() {
     uint16_t currentPlayer = game->lastMove == Cross
         ? game->crossesMoves
         : game->ballsMoves;
@@ -22,7 +22,7 @@ bool checkWin() {
     return false;
 }
 
-bool makeMove(int position) {
+bool make_move(int position) {
     if (position < 0 || position > 9)
         return false;
 
@@ -39,14 +39,14 @@ bool makeMove(int position) {
     return true;
 }
 
-void runGame(Game* newGame) {
+void run_game(Game* newGame) {
     newGame->lastMove = Ball;
 
     newGame->crossesMoves = 0;
     newGame->ballsMoves = 0;
 
-    newGame->checkWin = checkWin;
-    newGame->makeMove = makeMove;
+    newGame->check_win = check_win;
+    newGame->make_move = make_move;
 
     game = newGame;
 }
