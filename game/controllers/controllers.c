@@ -15,7 +15,19 @@ int get_position(WindowSize size, int x, int y) {
 
 void on_click(BoardController* this, int x, int y) {
     int position = get_position(this->size, x, y);
-    printf("Clicked on %d\n", position);
+    if (position == -1)
+        return;
+
+    if (!this->game->make_move(this->game, position))
+        return;
+
+    printf("%s: Clicked on %d\n", this->game->lastMove == Cross ? "Cross" : "Ball", position);
+    if (this->game->check_win(this->game))
+        printf("%s won!", this->game->lastMove == Cross ? "Cross" : "Ball");
+}
+
+void on_restart(BoardController* this) {
+    this->game->reset(this->game);
 }
 
 BoardController* init_controller(WindowSize size, Game* game) {
@@ -23,6 +35,7 @@ BoardController* init_controller(WindowSize size, Game* game) {
     controller->game = game;
     controller->size = size;
     controller->on_click = on_click;
+    controller->on_restart = on_restart;
 
     return controller;
 }

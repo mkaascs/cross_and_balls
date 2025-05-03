@@ -8,6 +8,7 @@ typedef struct BoardController {
     Game* game;
     WindowSize size;
     void (*on_click)(struct BoardController* this, int x, int y);
+    void (*on_restart)(struct BoardController* this);
 } BoardController;
 
 BoardController* init_controller(WindowSize, Game*);

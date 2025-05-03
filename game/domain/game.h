@@ -13,9 +13,11 @@ typedef struct Game {
     Player lastMove;
     uint16_t ballsMoves;
     uint16_t crossesMoves;
+    bool is_complete;
 
     bool (*check_win)(struct Game* this);
     bool (*make_move)(struct Game* this, int position);
+    void (*reset)(struct Game* this);
 } Game;
 
 Game* init_game();

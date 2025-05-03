@@ -19,10 +19,41 @@ void draw_board(SDL_Renderer* renderer, Game game, WindowSize size) {
     SDL_RenderPresent(renderer);
 }
 
-void draw_cross(SDL_Renderer*, SDL_Rect*) {
+static SDL_Texture* cross_texture = NULL;
+static SDL_Texture* ball_texture = NULL;
 
+bool load_sprites(SDL_Renderer* renderer) {
+    SDL_Surface* cross_surface = SDL_LoadBMP("../../sprites/cross.bmp");
+    if (cross_surface == NULL)
+        return false;
+
+    SDL_Surface* ball_surface = SDL_LoadBMP("../../sprites/ball.bmp");
+    if (ball_surface == NULL) {
+        SDL_FreeSurface(cross_surface);
+        return false;
+    }
+
+    cross_texture = SDL_CreateTextureFromSurface(renderer, cross_surface);
+    ball_texture = SDL_CreateTextureFromSurface(renderer, ball_surface);
+    SDL_FreeSurface(cross_surface);
+    SDL_FreeSurface(ball_surface);
+
+    return cross_texture && ball_texture;
 }
 
-void draw_ball(SDL_Renderer*, SDL_Rect*) {
+void free_sprites() {
+    if (cross_texture) SDL_DestroyTexture(cross_texture);
+    if (ball_texture) SDL_DestroyTexture(ball_texture);
+    cross_texture = NULL;
+    ball_texture = NULL;
+}
 
+void draw_cross(SDL_Renderer* renderer, SDL_Rect* rect) {
+    if (cross_texture)
+        SDL_RenderCopy(renderer, cross_texture, NULL, rect);
+}
+
+void draw_ball(SDL_Renderer* renderer, SDL_Rect* rect) {
+    if (ball_texture)
+        SDL_RenderCopy(renderer, ball_texture, NULL, rect);
 }
