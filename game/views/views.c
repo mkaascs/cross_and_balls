@@ -12,22 +12,35 @@ void draw_grid(SDL_Renderer* renderer, WindowSize size) {
 }
 
 void draw_board(SDL_Renderer* renderer, Game game, WindowSize size) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
     draw_grid(renderer, size);
+    int left = (size.window_width - size.cell_size * 3) / 2;
+    int top = (size.window_height - size.cell_size * 3) / 2;
 
-    SDL_RenderPresent(renderer);
+    for (int index = 0; index < 9; index++) {
+        SDL_Rect rect = {
+            (index % 3) * size.cell_size + left + size.cell_padding,
+            (index / 3) * size.cell_size + top + size.cell_padding,
+            size.cell_size - 2 * size.cell_padding,
+            size.cell_size - 2 * size.cell_padding
+        };
+
+        if (game.ballsMoves & (1 << index))
+            draw_ball(renderer, &rect);
+
+        else if (game.crossesMoves & (1 << index))
+            draw_cross(renderer, &rect);
+    }
 }
 
 static SDL_Texture* cross_texture = NULL;
 static SDL_Texture* ball_texture = NULL;
 
 bool load_sprites(SDL_Renderer* renderer) {
-    SDL_Surface* cross_surface = SDL_LoadBMP("../../sprites/cross.bmp");
+    SDL_Surface* cross_surface = SDL_LoadBMP("sprites/cross.bmp");
     if (cross_surface == NULL)
         return false;
 
-    SDL_Surface* ball_surface = SDL_LoadBMP("../../sprites/ball.bmp");
+    SDL_Surface* ball_surface = SDL_LoadBMP("sprites/ball.bmp");
     if (ball_surface == NULL) {
         SDL_FreeSurface(cross_surface);
         return false;

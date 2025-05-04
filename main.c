@@ -19,13 +19,20 @@ int main() {
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
+    if (!load_sprites(renderer)) {
+        fprintf(stderr, "Failed to load sprites\n");
+        free(size);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
     Game* game = init_game();
     BoardController* board_controller = init_controller(*size, game);
 
     bool running = true;
     SDL_Event event;
-
-    draw_board(renderer, *game, *size);
 
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -36,9 +43,17 @@ int main() {
                 board_controller->on_click(board_controller, event.button.x, event.button.y);
         }
 
-        SDL_Delay(16);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
+
+        draw_board(renderer, *game, *size);
+
+        SDL_RenderPresent(renderer);
+
+        SDL_Delay(16); // ~60 fps
     }
 
+    free_sprites();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

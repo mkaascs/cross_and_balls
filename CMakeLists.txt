@@ -17,6 +17,7 @@ add_executable(cross_ball main.c
         game/controllers/controllers.h
         game/views/views.h
         game/views/views.c
-        game/controllers/controllers.c)
+        game/controllers/controllers.c
+)
 
 target_link_libraries(cross_ball ${SDL2_LIBRARY})
