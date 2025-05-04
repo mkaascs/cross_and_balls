@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "controllers.h"
 
+#include "../views/views.h"
+
 int get_position(WindowSize size, int x, int y) {
     int left = (size.window_width - size.cell_size * 3) / 2;
     int top = (size.window_height - size.cell_size * 3) / 2;
@@ -13,7 +15,7 @@ int get_position(WindowSize size, int x, int y) {
     return (y - top) / size.cell_size * 3 + (x - left) / size.cell_size;
 }
 
-void on_click(BoardController* this, int x, int y) {
+void on_click(const BoardController* this, int x, int y) {
     int position = get_position(this->size, x, y);
     if (position == -1)
         return;
@@ -21,19 +23,22 @@ void on_click(BoardController* this, int x, int y) {
     if (!this->game->make_move(this->game, position))
         return;
 
-    printf("%s: Clicked on %d\n", this->game->lastMove == Cross ? "Cross" : "Ball", position);
-    if (this->game->check_win(this->game))
-        printf("%s won!", this->game->lastMove == Cross ? "Cross" : "Ball");
+    printf("%s: Clicked on %d\n", this->game->last_move == Cross ? "Cross" : "Ball", position);
+    if (this->game->check_win(this->game)) {
+
+        printf("%s won!", this->game->last_move == Cross ? "Cross" : "Ball");
+    }
 }
 
-void on_restart(BoardController* this) {
+void on_restart(const BoardController* this) {
     this->game->reset(this->game);
 }
 
-BoardController* init_controller(WindowSize size, Game* game) {
+BoardController* init_controller(SDL_Renderer* renderer, WindowSize size, Game* game) {
     BoardController* controller = malloc(sizeof(BoardController));
     controller->game = game;
     controller->size = size;
+    controller->renderer = renderer;
     controller->on_click = on_click;
     controller->on_restart = on_restart;
 

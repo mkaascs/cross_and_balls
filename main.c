@@ -29,7 +29,7 @@ int main() {
     }
 
     Game* game = init_game();
-    BoardController* board_controller = init_controller(*size, game);
+    BoardController* board_controller = init_controller(renderer, *size, game);
 
     bool running = true;
     SDL_Event event;
@@ -47,6 +47,8 @@ int main() {
         SDL_RenderClear(renderer);
 
         draw_board(renderer, *game, *size);
+        if (game->is_complete)
+            draw_win_way(renderer, game->get_win_way(game), *size);
 
         SDL_RenderPresent(renderer);
 
