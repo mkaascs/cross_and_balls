@@ -20,13 +20,12 @@ add_executable(cross_ball
         main.c
         game/domain/game.c
         game/domain/game.h
-        game/views/window/size.h
-        game/views/window/size.c
+        game/views/layout/layout.h
+        game/views/layout/layout.c
         game/controllers/controllers.h
         game/views/views.h
         game/views/views.c
         game/controllers/controllers.c
-        game/views/primitives/button.h
         game/domain/query/moves.h
         game/domain/query/moves.c
 )

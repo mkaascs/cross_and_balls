@@ -27,6 +27,17 @@ bool check_win(Game* this) {
     return false;
 }
 
+bool check_draw(Game* this) {
+    uint16_t occupied = this->crosses_moves | this->balls_moves;
+    bool full = (occupied & 0x1FF) == 0x1FF;
+    bool no_winner = check_win(this);
+    if (!(full && no_winner))
+        return false;
+
+    this->is_complete = true;
+    return true;
+}
+
 bool make_move(Game* this, int position) {
     if (this == NULL)
         return false;
@@ -98,6 +109,17 @@ void reset(Game* this) {
     this->balls_moves = 0;
     this->last_move = Ball;
     this->is_complete = false;
+    MoveElement* current = pop(this->balls);
+    while (current != NULL) {
+        free(current);
+        current = pop(this->balls);
+    }
+
+    current = pop(this->crosses);
+    while (current != NULL) {
+        free(current);
+        current = pop(this->crosses);
+    }
 }
 
 Game* init_game() {
@@ -114,6 +136,7 @@ Game* init_game() {
     new_game->crosses->tail = NULL;
 
     new_game->check_win = check_win;
+    new_game->check_draw = check_draw;
     new_game->make_move = make_move;
     new_game->get_win_way = get_win_way;
     new_game->reset = reset;

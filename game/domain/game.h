@@ -20,6 +20,7 @@ typedef struct Game {
     MoveQuery* balls;
 
     bool (*check_win)(struct Game* this);
+    bool (*check_draw)(struct Game* this);
     bool (*make_move)(struct Game* this, int position);
     uint16_t (*get_win_way)(struct Game* this);
     void (*reset)(struct Game* this);
