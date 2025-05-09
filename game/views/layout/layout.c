@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "layout.h"
 
+#include "../../../memstat/memstat.h"
+
 #define DEFAULT_WINDOW_WIDTH 500
 #define DEFAULT_WINDOW_HEIGHT 625
 
@@ -13,7 +15,7 @@
 #define RESTART_BUTTON_HEIGHT 42
 
 WindowLayout* init_window_layout() {
-    WindowLayout* size = malloc(sizeof(WindowLayout));
+    WindowLayout* size = track_malloc(sizeof(WindowLayout));
 
     size->window_height = DEFAULT_WINDOW_HEIGHT;
     size->window_width = DEFAULT_WINDOW_WIDTH;

@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "moves.h"
 
+#include "../../../memstat/memstat.h"
+
 bool push(MoveQuery* query, MoveElement* move) {
     if (query == NULL || move == NULL)
         return false;
@@ -42,8 +44,8 @@ void free_query(MoveQuery* query) {
         if (move == NULL)
             break;
 
-        free(move);
+        track_free((void**)&move);
     }
 
-    free(query);
+    track_free((void**)&query);
 }

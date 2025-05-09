@@ -10,7 +10,14 @@ typedef enum {
     Ball, Cross
 } Player;
 
+typedef struct {
+    unsigned int cross_score;
+    unsigned int ball_score;
+} GameScore;
+
 typedef struct Game {
+    GameScore score;
+
     Player last_move;
     uint16_t balls_moves;
     uint16_t crosses_moves;

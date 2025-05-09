@@ -1,15 +1,17 @@
 #include <stdlib.h>
 #include "game.h"
 
+#include "../../memstat/memstat.h"
+
 #define WIN_PATTERNS_COUNT 8
 
-const uint16_t WIN_PATTERNS[WIN_PATTERNS_COUNT] = {
+static const uint16_t WIN_PATTERNS[WIN_PATTERNS_COUNT] = {
     0b111000000, 0b000111000, 0b000000111,
     0b100100100, 0b010010010, 0b001001001,
     0b100010001, 0b001010100
 };
 
-bool check_win(Game* this) {
+static bool check_win(Game* this) {
     if (this == NULL)
         return false;
 
@@ -27,10 +29,10 @@ bool check_win(Game* this) {
     return false;
 }
 
-bool check_draw(Game* this) {
+static bool check_draw(Game* this) {
     uint16_t occupied = this->crosses_moves | this->balls_moves;
     bool full = (occupied & 0x1FF) == 0x1FF;
-    bool no_winner = check_win(this);
+    bool no_winner = !check_win(this);
     if (!(full && no_winner))
         return false;
 
@@ -38,7 +40,7 @@ bool check_draw(Game* this) {
     return true;
 }
 
-bool make_move(Game* this, int position) {
+static bool make_move(Game* this, int position) {
     if (this == NULL)
         return false;
 
@@ -52,7 +54,7 @@ bool make_move(Game* this, int position) {
     if ((this->crosses_moves | this->balls_moves) & mask)
         return false;
 
-    MoveElement* move = malloc(sizeof(MoveElement));
+    MoveElement* move = track_malloc(sizeof(MoveElement));
     move->position = position;
     move->next = NULL;
 
@@ -82,11 +84,11 @@ bool make_move(Game* this, int position) {
         this->balls_moves &= ~(1 << last_move->position);
     }
 
-    free(last_move);
+    track_free((void**)&last_move);
     return true;
 }
 
-uint16_t get_win_way(Game* this) {
+static uint16_t get_win_way(Game* this) {
     if (this == NULL)
         return 0;
 
@@ -101,7 +103,7 @@ uint16_t get_win_way(Game* this) {
     return 0;
 }
 
-void reset(Game* this) {
+static void reset(Game* this) {
     if (this == NULL)
         return;
 
@@ -111,27 +113,27 @@ void reset(Game* this) {
     this->is_complete = false;
     MoveElement* current = pop(this->balls);
     while (current != NULL) {
-        free(current);
+        track_free((void**)&current);
         current = pop(this->balls);
     }
 
     current = pop(this->crosses);
     while (current != NULL) {
-        free(current);
+        track_free((void**)&current);
         current = pop(this->crosses);
     }
 }
 
 Game* init_game() {
-    Game* new_game = malloc(sizeof(Game));
+    Game* new_game = track_malloc(sizeof(Game));
     new_game->last_move = Ball;
 
     new_game->crosses_moves = 0;
     new_game->balls_moves = 0;
     new_game->is_complete = false;
 
-    new_game->balls = calloc(0, sizeof(MoveQuery));
-    new_game->crosses = calloc(0, sizeof(MoveQuery));
+    new_game->balls = track_calloc(0, sizeof(MoveQuery));
+    new_game->crosses = track_calloc(0, sizeof(MoveQuery));
     new_game->balls->tail = NULL;
     new_game->crosses->tail = NULL;
 
