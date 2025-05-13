@@ -2,7 +2,7 @@
 #define GAME_H
 #include <stdbool.h>
 #include <stdint.h>
-#include "query/moves.h"
+#include "../query/moves.h"
 
 #define MAX_MOVES_COUNT 3
 
@@ -16,8 +16,6 @@ typedef struct {
 } GameScore;
 
 typedef struct Game {
-    GameScore score;
-
     Player last_move;
     uint16_t balls_moves;
     uint16_t crosses_moves;
@@ -26,14 +24,14 @@ typedef struct Game {
     MoveQuery* crosses;
     MoveQuery* balls;
 
-    bool (*check_win)(struct Game* this);
-    bool (*check_draw)(struct Game* this);
-    bool (*make_move)(struct Game* this, int position);
-    uint16_t (*get_win_way)(struct Game* this);
-    void (*reset)(struct Game* this);
+    bool (*check_win)(struct Game*);
+    bool (*check_draw)(struct Game*);
+    bool (*make_move)(struct Game*, int);
+    uint16_t (*get_win_way)(struct Game*);
+    void (*reset)(struct Game*);
 } Game;
 
 Game* init_game();
-void free_game(Game** game);
+void free_game(Game*);
 
 #endif //GAME_H

@@ -12,6 +12,7 @@ typedef struct {
 void* track_malloc(size_t);
 void* track_calloc(size_t, size_t);
 void* track_realloc(void*, size_t);
+char* strdup_track(const char*);
 void track_free(void**);
 void get_memstat(Memstat*);
 

@@ -21,8 +21,8 @@ link_directories(
 
 add_executable(cross_ball
         main.c
-        game/domain/game.c
-        game/domain/game.h
+        game/domain/entities/game.c
+        game/domain/entities/game.h
         game/views/layout/layout.h
         game/views/layout/layout.c
         game/controllers/controllers.h
@@ -37,6 +37,18 @@ add_executable(cross_ball
         game/views/assets.c
         game/controllers/states.h
         game/controllers/board/states.c
+        game/controllers/menu/menu.c
+        game/controllers/menu/states.c
+        game/domain/entities/leaderboard.h
+        game/domain/entities/leaderboard.c
+        game/views/menu/views.h
+        game/views/menu/views.c
+        game/controllers/leaderboard/leaderboard.c
+        game/controllers/leaderboard/states.c
+        game/views/leaderboard/views.h
+        game/views/leaderboard/views.c
+        game/views/primitives/primitives.h
+        game/views/primitives/primitives.c
 )
 
 # Линкуем библиотеки

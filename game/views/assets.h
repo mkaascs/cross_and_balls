@@ -6,6 +6,8 @@
 SDL_Texture* cross_texture;
 SDL_Texture* ball_texture;
 SDL_Texture* restart_button_texture;
+SDL_Texture* close_button_texture;
+SDL_Texture* logo_texture;
 
 void free_assets();
 bool load_assets(SDL_Renderer*);

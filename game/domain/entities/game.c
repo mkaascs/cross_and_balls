@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "game.h"
 
-#include "../../memstat/memstat.h"
+#include "../../../memstat/memstat.h"
 
 #define WIN_PATTERNS_COUNT 8
 
@@ -143,4 +143,11 @@ Game* init_game() {
     new_game->get_win_way = get_win_way;
     new_game->reset = reset;
     return new_game;
+}
+
+void free_game(Game* game) {
+    game->reset(game);
+    free_query(game->balls);
+    free_query(game->crosses);
+    track_free((void**)&game);
 }

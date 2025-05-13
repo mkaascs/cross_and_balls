@@ -5,7 +5,7 @@
 #include <SDL_ttf.h>
 #include <SDL2_gfxPrimitives.h>
 #include "../layout/layout.h"
-#include "../../domain/game.h"
+#include "../../domain/entities/game.h"
 
 void draw_board(SDL_Renderer*, Game, WindowLayout);
 void draw_restart_button(SDL_Renderer*, WindowLayout);
