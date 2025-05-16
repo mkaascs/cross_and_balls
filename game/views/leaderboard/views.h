@@ -7,6 +7,6 @@
 #include "../layout/layout.h"
 #include "../../domain/entities/leaderboard.h"
 
-void draw_leader_board(SDL_Renderer*, LeaderBoard, WindowLayout);
+void draw_leaderboard(SDL_Renderer*, LeaderBoard, WindowLayout);
 
 #endif //VIEWS_H

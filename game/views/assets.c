@@ -1,69 +1,52 @@
 #include "assets.h"
 
-extern SDL_Texture* cross_texture = NULL;
-extern SDL_Texture* ball_texture = NULL;
-extern SDL_Texture* restart_button_texture = NULL;
-extern SDL_Texture* close_button_texture = NULL;
-extern SDL_Texture* logo_texture = NULL;
+typedef struct {
+    const char* path;
+    SDL_Texture* texture;
+} SpriteResource;
+
+static SpriteResource sprite_table[SPRITE_COUNT] = {
+    [SPRITE_CROSS]              = { "assets/sprites/cross.bmp", NULL },
+    [SPRITE_BALL]               = { "assets/sprites/ball.bmp", NULL },
+    [SPRITE_RESTART_BUTTON]     = { "assets/sprites/button_restart.bmp", NULL },
+    [SPRITE_CLOSE_BUTTON]       = { "assets/sprites/close_button.bmp", NULL },
+    [SPRITE_LOGO]               = { "assets/sprites/logo.bmp", NULL },
+    [SPRITE_PLAY_BUTTON]        = { "assets/sprites/button_play.bmp", NULL},
+    [SPRITE_LEADERBOARD_BUTTON] = { "assets/sprites/button_leaderboard.bmp", NULL}
+};
 
 bool load_assets(SDL_Renderer* renderer) {
-    SDL_Surface* cross_surface = SDL_LoadBMP("assets/sprites/cross.bmp");
-    if (cross_surface == NULL)
-        return false;
+    for (int i = 0; i < SPRITE_COUNT; i++) {
+        SDL_Surface* surface = SDL_LoadBMP(sprite_table[i].path);
+        if (surface == NULL) {
+            SDL_Log("Failed to load: %s", sprite_table[i].path);
+            return false;
+        }
 
-    SDL_Surface* ball_surface = SDL_LoadBMP("assets/sprites/ball.bmp");
-    if (ball_surface == NULL) {
-        SDL_FreeSurface(cross_surface);
-        return false;
+        sprite_table[i].texture = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_FreeSurface(surface);
+
+        if (sprite_table[i].texture == NULL) {
+            SDL_Log("Failed to create texture from: %s", sprite_table[i].path);
+            return false;
+        }
     }
 
-    SDL_Surface* restart_button_surface = SDL_LoadBMP("assets/sprites/button_restart.bmp");
-    if (restart_button_surface == NULL) {
-        SDL_FreeSurface(cross_surface);
-        SDL_FreeSurface(ball_surface);
-        return false;
-    }
-
-    SDL_Surface* close_button_surface = SDL_LoadBMP("assets/sprites/close_button.bmp");
-    if (close_button_surface == NULL) {
-        SDL_FreeSurface(cross_surface);
-        SDL_FreeSurface(ball_surface);
-        SDL_FreeSurface(restart_button_surface);
-        return false;
-    }
-
-    SDL_Surface* logo_surface = SDL_LoadBMP("assets/sprites/logo.bmp");
-    if (logo_surface == NULL) {
-        SDL_FreeSurface(cross_surface);
-        SDL_FreeSurface(ball_surface);
-        SDL_FreeSurface(restart_button_surface);
-        SDL_FreeSurface(close_button_surface);
-        return false;
-    }
-
-    cross_texture = SDL_CreateTextureFromSurface(renderer, cross_surface);
-    ball_texture = SDL_CreateTextureFromSurface(renderer, ball_surface);
-    restart_button_texture = SDL_CreateTextureFromSurface(renderer, restart_button_surface);
-    close_button_texture = SDL_CreateTextureFromSurface(renderer, close_button_surface);
-    logo_texture = SDL_CreateTextureFromSurface(renderer, logo_surface);
-    SDL_FreeSurface(cross_surface);
-    SDL_FreeSurface(ball_surface);
-    SDL_FreeSurface(restart_button_surface);
-    SDL_FreeSurface(close_button_surface);
-    SDL_FreeSurface(logo_surface);
-
-    return cross_texture && ball_texture && restart_button_texture && close_button_texture && logo_texture;
+    return true;
 }
 
 void free_assets() {
-    if (cross_texture) SDL_DestroyTexture(cross_texture);
-    if (ball_texture) SDL_DestroyTexture(ball_texture);
-    if (restart_button_texture) SDL_DestroyTexture(restart_button_texture);
-    if (close_button_texture) SDL_DestroyTexture(close_button_texture);
-    if (logo_texture) SDL_DestroyTexture(logo_texture);
-    cross_texture = NULL;
-    ball_texture = NULL;
-    restart_button_texture = NULL;
-    close_button_texture = NULL;
-    logo_texture = NULL;
+    for (int i = 0; i < SPRITE_COUNT; i++) {
+        if (sprite_table[i].texture) {
+            SDL_DestroyTexture(sprite_table[i].texture);
+            sprite_table[i].texture = NULL;
+        }
+    }
+}
+
+SDL_Texture* get_sprite(SpriteID id) {
+    if (id >= SPRITE_COUNT)
+        return NULL;
+
+    return sprite_table[id].texture;
 }

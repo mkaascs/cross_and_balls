@@ -18,6 +18,13 @@
 
 #define LOGO_WIDTH 300
 
+#define LEADERBOARD_FONT_SIZE 20
+#define LEADERBOARD_LABEL_HEIGHT 35
+#define LEADERBOARD_PLAYERS_COUNT 10
+
+#define MENU_BUTTON_WIDTH 285
+#define MENU_BUTTON_HEIGHT 45
+
 WindowLayout* init_window_layout() {
     WindowLayout* size = track_malloc(sizeof(WindowLayout));
 
@@ -49,6 +56,16 @@ WindowLayout* init_window_layout() {
     size->menu.logo_height = size->menu.logo_width * 5 / 7;
     size->menu.logo_x = (DEFAULT_WINDOW_WIDTH - LOGO_WIDTH) / 2;
     size->menu.logo_y = DEFAULT_PADDING_TOP;
+    size->menu.button_width = MENU_BUTTON_WIDTH;
+    size->menu.button_height = MENU_BUTTON_HEIGHT;
+    size->menu.button_x = (size->window_width - size->menu.button_width) / 2;
+    size->menu.first_button_y = size->menu.logo_y + size->menu.logo_height + size->padding_top;
+
+    size->leaderboard.font_size = LEADERBOARD_FONT_SIZE;
+    size->leaderboard.player_label_height = LEADERBOARD_LABEL_HEIGHT;
+
+    size->leaderboard.left = DEFAULT_PADDING_LEFT;
+    size->leaderboard.top = (DEFAULT_WINDOW_HEIGHT - LEADERBOARD_PLAYERS_COUNT * LEADERBOARD_LABEL_HEIGHT) / 2;
 
     return size;
 }

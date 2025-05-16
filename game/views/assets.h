@@ -3,13 +3,19 @@
 #include <SDL.h>
 #include <stdbool.h>
 
-SDL_Texture* cross_texture;
-SDL_Texture* ball_texture;
-SDL_Texture* restart_button_texture;
-SDL_Texture* close_button_texture;
-SDL_Texture* logo_texture;
+typedef enum {
+    SPRITE_CROSS,
+    SPRITE_BALL,
+    SPRITE_RESTART_BUTTON,
+    SPRITE_CLOSE_BUTTON,
+    SPRITE_LOGO,
+    SPRITE_PLAY_BUTTON,
+    SPRITE_LEADERBOARD_BUTTON,
+    SPRITE_COUNT
+} SpriteID;
 
 void free_assets();
 bool load_assets(SDL_Renderer*);
+SDL_Texture* get_sprite(SpriteID id);
 
 #endif //ASSETS_H

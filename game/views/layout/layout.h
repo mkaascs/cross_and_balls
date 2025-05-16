@@ -18,7 +18,23 @@ typedef struct {
     unsigned int logo_y;
     unsigned int logo_width;
     unsigned int logo_height;
+
+    unsigned int button_width;
+    unsigned int button_height;
+
+    unsigned int button_x;
+    unsigned int first_button_y;
 } MenuLayout;
+
+typedef struct {
+    unsigned int font_size;
+    unsigned int player_label_height;
+
+    unsigned int top;
+    unsigned int left;
+
+    unsigned int players_count;
+} LeaderboardLayout;
 
 typedef struct {
     unsigned int window_width;
@@ -34,6 +50,7 @@ typedef struct {
 
     BoardLayout board;
     MenuLayout menu;
+    LeaderboardLayout leaderboard;
 } WindowLayout;
 
 WindowLayout* init_window_layout();

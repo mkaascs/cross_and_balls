@@ -21,7 +21,7 @@ typedef struct GameState {
 
 typedef struct BoardController BoardController;
 typedef struct MenuController MenuController;
-typedef struct LeaderBoardController LeaderBoardController;
+typedef struct LeaderboardController LeaderboardController;
 
 typedef struct GameScreenState {
     GameState base;
@@ -35,8 +35,8 @@ typedef struct MenuScreenState {
 
 typedef struct LeaderBoardScreenState {
     GameState base;
-    LeaderBoardController* controller;
-} LeaderBoardScreenState;
+    LeaderboardController* controller;
+} LeaderboardScreenState;
 
 GameState* init_game_state(WindowLayout, Game*, void (*)(StateScreen));
 GameState* init_menu_state(WindowLayout, void (*)(StateScreen));

@@ -8,10 +8,16 @@ static void on_update(const MenuController* this, SDL_Renderer* renderer) {
 }
 
 static void on_click(const MenuController* this, int x, int y) {
-    if (y <= this->layout.window_height / 2)
+    if (x >= this->layout.menu.button_x && x <= this->layout.menu.button_x + this->layout.menu.button_width &&
+        y >= this->layout.menu.first_button_y && y <= this->layout.menu.first_button_y + this->layout.menu.button_height) {
         this->change_state(GAME_SCREEN);
+        return;
+        }
 
-    else this->change_state(LEADERBOARD_SCREEN);
+    if (x >= this->layout.menu.button_x && x <= this->layout.menu.button_x + this->layout.menu.button_width &&
+        y >= this->layout.menu.first_button_y + this->layout.close_button_height + this->layout.padding_top && y <= this->layout.menu.first_button_y + 2*this->layout.menu.button_height + this->layout.padding_top) {
+        this->change_state(LEADERBOARD_SCREEN);
+        }
 }
 
 MenuController* init_menu_controller(WindowLayout layout, void (*change_state)(StateScreen)) {

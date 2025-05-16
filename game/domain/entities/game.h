@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "../query/moves.h"
 
-#define MAX_MOVES_COUNT 3
+#define MAX_MOVES_COUNT 9
 
 typedef enum {
     Ball, Cross
@@ -20,6 +20,8 @@ typedef struct Game {
     uint16_t balls_moves;
     uint16_t crosses_moves;
     bool is_complete;
+
+    GameScore score;
 
     MoveQuery* crosses;
     MoveQuery* balls;

@@ -5,29 +5,15 @@
 #define RESTART_BUTTON_WIDTH 116
 #define RESTART_BUTTON_HEIGHT 42
 
-void draw_cross(SDL_Renderer* renderer, const SDL_Rect* rect) {
-    if (cross_texture)
-        SDL_RenderCopy(renderer, cross_texture, NULL, rect);
+static void draw_cross(SDL_Renderer* renderer, const SDL_Rect* rect) {
+    SDL_RenderCopy(renderer, get_sprite(SPRITE_CROSS), NULL, rect);
 }
 
-void draw_ball(SDL_Renderer* renderer, const SDL_Rect* rect) {
-    if (ball_texture)
-        SDL_RenderCopy(renderer, ball_texture, NULL, rect);
+static void draw_ball(SDL_Renderer* renderer, const SDL_Rect* rect) {
+    SDL_RenderCopy(renderer, get_sprite(SPRITE_BALL), NULL, rect);
 }
 
-void draw_restart_button(SDL_Renderer* renderer, WindowLayout layout) {
-    SDL_Rect button = {
-        layout.board.restart_button_x,
-        layout.board.restart_button_y,
-        layout.board.restart_button_width,
-        layout.board.restart_button_height
-    };
-
-    if (restart_button_texture)
-        SDL_RenderCopy(renderer, restart_button_texture, NULL, &button);
-}
-
-void draw_grid(SDL_Renderer* renderer, WindowLayout layout) {
+static void draw_grid(SDL_Renderer* renderer, WindowLayout layout) {
     for (int count = 0; count <= 3; count++) {
         thickLineRGBA(renderer,
             layout.board.cell_left + count * layout.board.cell_size,
@@ -45,11 +31,19 @@ void draw_grid(SDL_Renderer* renderer, WindowLayout layout) {
     }
 }
 
-void draw_text(SDL_Renderer* renderer, int x, int y, const char* text) {
+static void draw_default_text(SDL_Renderer* renderer, int x, int y, const char* text) {
     stringRGBA(renderer, x, y, text, 30, 30, 30, 255);
 }
 
-void draw_moves_query(SDL_Renderer* renderer, MoveQuery* query, WindowLayout layout) {
+static void draw_score(SDL_Renderer* renderer, GameScore score, WindowLayout layout) {
+    char buffer[8];
+    sprintf(buffer, "%d : %d", score.cross_score, score.ball_score);
+
+    SDL_Color color = {0,0,0,255};
+    draw_text_centred_x(renderer, buffer, layout.window_width, layout.padding_top, 32, color);
+}
+
+static void draw_moves_query(SDL_Renderer* renderer, MoveQuery* query, WindowLayout layout) {
     int count = 1;
     MoveElement* current = query->tail;
     while (current != NULL) {
@@ -58,7 +52,7 @@ void draw_moves_query(SDL_Renderer* renderer, MoveQuery* query, WindowLayout lay
 
         char text[2];
         sprintf(text, "%d", 3 + (count++ - 1) - (query->length - 1));
-        draw_text(renderer,
+        draw_default_text(renderer,
             x + layout.board.cell_size - layout.board.cell_padding,
             y + layout.board.cell_size - layout.board.cell_padding,
             text);
@@ -67,9 +61,21 @@ void draw_moves_query(SDL_Renderer* renderer, MoveQuery* query, WindowLayout lay
     }
 }
 
+void draw_restart_button(SDL_Renderer* renderer, WindowLayout layout) {
+    SDL_Rect button = {
+        layout.board.restart_button_x,
+        layout.board.restart_button_y,
+        layout.board.restart_button_width,
+        layout.board.restart_button_height
+    };
+
+    SDL_RenderCopy(renderer, get_sprite(SPRITE_RESTART_BUTTON), NULL, &button);
+}
+
 void draw_board(SDL_Renderer* renderer, Game game, WindowLayout layout) {
     draw_grid(renderer, layout);
     draw_close_button(renderer, layout);
+    draw_score(renderer, game.score, layout);
     for (int index = 0; index < 9; index++) {
         SDL_Rect rect = {
             (index % 3) * layout.board.cell_size + layout.board.cell_left + layout.board.cell_padding,
@@ -84,9 +90,6 @@ void draw_board(SDL_Renderer* renderer, Game game, WindowLayout layout) {
         else if (game.crosses_moves & (1 << index))
             draw_cross(renderer, &rect);
     }
-
-    draw_moves_query(renderer, game.crosses, layout);
-    draw_moves_query(renderer, game.balls, layout);
 }
 
 void draw_win_way(SDL_Renderer* renderer, uint16_t way, WindowLayout layout) {

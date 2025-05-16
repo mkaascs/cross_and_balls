@@ -49,6 +49,8 @@ add_executable(cross_ball
         game/views/leaderboard/views.c
         game/views/primitives/primitives.h
         game/views/primitives/primitives.c
+        game/ai/ai.h
+        game/ai/ai.c
 )
 
 # Линкуем библиотеки

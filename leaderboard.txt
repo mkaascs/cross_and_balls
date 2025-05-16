@@ -1,2 +1,4 @@
 Maxim: 5
 AndrewBo: 9
+Dima: 0
+HaZOV: 988

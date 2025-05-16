@@ -2,6 +2,7 @@
 #include "../states.h"
 #include "../../views/board/views.h"
 #include "../../../memstat/memstat.h"
+#include "../../ai/ai.h"
 
 static void on_update(const BoardController* this, SDL_Renderer* renderer) {
     draw_board(renderer, *this->game, this->layout);
@@ -24,6 +25,8 @@ static void on_restart_button_click(const BoardController* this) {
 }
 
 static void on_close_button_click(const BoardController* this) {
+    this->game->score.cross_score = 0;
+    this->game->score.ball_score = 0;
     this->game->reset(this->game);
     this->change_state(MENU_SCREEN);
 }
@@ -48,13 +51,16 @@ static void on_click(const BoardController* this, int x, int y) {
     if (!this->game->make_move(this->game, position))
         return;
 
+    make_move_ai(this->game);
     if (this->game->check_win(this->game)) {
+        if (this->game->last_move == Cross)
+            this->game->score.cross_score++;
 
+        else if (this->game->last_move == Ball)
+            this->game->score.ball_score++;
     }
 
-    if (this->game->check_draw(this->game)) {
-        printf("Nobody won!\n");
-    }
+    else this->game->check_draw(this->game);
 }
 
 BoardController* init_board_controller(WindowLayout layout, Game* game, void (*change_state)(StateScreen)) {
