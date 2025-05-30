@@ -1,172 +1,165 @@
 #include "leaderboard.h"
+#include "../../../memstat/memstat.h"
 
 #include <string.h>
 
-#include "../../../memstat/memstat.h"
+static int max(const int first, const int second) {
+    return (first > second) ? first : second;
+}
 
-static Gamer* merge(Gamer* a, Gamer* b) {
-    if (a == NULL) return b;
-    if (b == NULL) return a;
+static int height(const GamerNode* node) {
+    return node ? node->height : 0;
+}
 
-    Gamer* result = NULL;
+static void update_height(GamerNode* node) {
+    if (node != NULL)
+        node->height = 1 + max(height(node->left), height(node->right));
+}
 
-    if (a->score >= b->score) {
-        result = a;
-        result->next = merge(a->next, b);
-    } else {
-        result = b;
-        result->next = merge(a, b->next);
+static int balance_factor(const GamerNode* node) {
+    return node != NULL ? height(node->left) - height(node->right) : 0;
+}
+
+static GamerNode* rotate_right(GamerNode* y) {
+    GamerNode* x = y->left;
+    GamerNode* T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    update_height(y);
+    update_height(x);
+
+    return x;
+}
+
+static GamerNode* rotate_left(GamerNode* x) {
+    GamerNode* y = x->right;
+    GamerNode* T2 = y->left;
+
+    y->left = x;
+    x->right = T2;
+
+    update_height(x);
+    update_height(y);
+
+    return y;
+}
+
+static GamerNode* balance(GamerNode* node) {
+    update_height(node);
+    int bf = balance_factor(node);
+
+    if (bf > 1) {
+        if (balance_factor(node->left) < 0)
+            node->left = rotate_left(node->left);
+
+        return rotate_right(node);
     }
 
-    return result;
-}
+    if (bf < -1) {
+        if (balance_factor(node->right) > 0)
+            node->right = rotate_right(node->right);
 
-static void split(Gamer* source, Gamer** frontRef, Gamer** backRef) {
-    Gamer* slow = source;
-    Gamer* fast = source->next;
-
-    while (fast) {
-        fast = fast->next;
-        if (fast) {
-            slow = slow->next;
-            fast = fast->next;
-        }
+        return rotate_left(node);
     }
 
-    *frontRef = source;
-    *backRef = slow->next;
-    slow->next = NULL;
+    return node;
 }
 
-static Gamer* merge_sort_gamers(Gamer* head) {
-    if (head == NULL || head->next == NULL)
-        return head;
+static GamerNode* find_and_update(GamerNode* node, Gamer* gamer) {
+    if (node == NULL)
+        return NULL;
 
-    Gamer* a;
-    Gamer* b;
+    int cmp = strcmp(gamer->name, node->gamer->name);
+    if (cmp == 0) {
+        node->gamer->score = gamer->score;
+        return node;
+    }
 
-    split(head, &a, &b);
+    GamerNode* found = find_and_update(node->left, gamer);
+    if (found == NULL)
+        found = find_and_update(node->right, gamer);
 
-    a = merge_sort_gamers(a);
-    b = merge_sort_gamers(b);
-
-    return merge(a, b);
+    return found;
 }
 
-void sort_leader_board(LeaderBoard* board) {
-    if (board == NULL || board->head == NULL)
+static GamerNode* insert_node(GamerNode* node, Gamer* gamer) {
+    if (node == NULL) {
+        GamerNode* new_node = (GamerNode*)track_malloc(sizeof(GamerNode));
+        new_node->gamer = gamer;
+        new_node->left = new_node->right = NULL;
+        new_node->height = 1;
+        return new_node;
+    }
+
+    if (gamer->score > node->gamer->score ||
+        (gamer->score == node->gamer->score && strcmp(gamer->name, node->gamer->name) < 0))
+        node->left = insert_node(node->left, gamer);
+
+    else node->right = insert_node(node->right, gamer);
+
+    return balance(node);
+}
+
+static void free_node(GamerNode* node) {
+    if (node == NULL)
         return;
 
-    board->head = merge_sort_gamers(board->head);
-
-    Gamer* current = board->head;
-    board->length = 0;
-    while (current) {
-        board->tail = current;
-        current = current->next;
-        board->length++;
-    }
+    free_node(node->left);
+    free_node(node->right);
+    track_free((void**)&node->gamer);
+    track_free((void**)&node);
 }
 
 LeaderBoard* init_leader_board() {
-    LeaderBoard* leader_board = track_malloc(sizeof(LeaderBoard));
-    leader_board->head = NULL;
-    leader_board->tail = NULL;
-    leader_board->length = 0;
-    return leader_board;
+    LeaderBoard* lb = (LeaderBoard*)track_malloc(sizeof(LeaderBoard));
+    lb->root = NULL;
+    lb->length = 0;
+    return lb;
+}
+
+void add_gamer(LeaderBoard* lb, Gamer* gamer) {
+    if (lb == NULL || gamer == NULL)
+        return;
+
+    GamerNode* updated = find_and_update(lb->root, gamer);
+    if (updated != NULL)
+        return;
+
+    Gamer* new_gamer = (Gamer*)track_malloc(sizeof(Gamer));
+    strncpy(new_gamer->name, gamer->name, NAME_LENGTH);
+    new_gamer->score = gamer->score;
+
+    lb->root = insert_node(lb->root, new_gamer);
+    lb->length++;
+}
+
+void free_leader_board(LeaderBoard* lb) {
+    if (lb == NULL)
+        return;
+
+    free_node(lb->root);
+    track_free((void**)&lb);
 }
 
 LeaderBoard* init_leader_board_from_file(FILE* file) {
+    LeaderBoard* lb = init_leader_board();
     if (file == NULL)
-        return init_leader_board();
+        return lb;
 
-    LeaderBoard* leader_board = init_leader_board();
-    char name[NAME_LENGTH];
-    int score;
-    while (fscanf(file, " %[^:]: %d", name, &score) == 2) {
-        if (score < 0) score = 0;
-        Gamer* gamer = track_malloc(sizeof(Gamer));
-        strncpy(gamer->name, name, NAME_LENGTH - 1);
-        gamer->name[NAME_LENGTH - 1] = '\0';
-        gamer->score = score;
-        gamer->next = NULL;
-
-        if (leader_board->head == NULL) {
-            leader_board->head = gamer;
-            leader_board->tail = gamer;
+    char line[128];
+    while (fgets(line, sizeof(line), file)) {
+        char name[NAME_LENGTH];
+        int score;
+        if (sscanf(line, " %31[^:]: %d", name, &score) == 2) {
+            Gamer temp;
+            strncpy(temp.name, name, NAME_LENGTH);
+            temp.name[NAME_LENGTH - 1] = '\0';
+            temp.score = score;
+            add_gamer(lb, &temp);
         }
-
-        else {
-            leader_board->tail->next = gamer;
-            leader_board->tail = gamer;
-        }
-
-        leader_board->length++;
     }
 
-    sort_leader_board(leader_board);
-    return leader_board;
-}
-
-void add_gamer(LeaderBoard* leader_board, Gamer* gamer) {
-    Gamer* prev = NULL;
-    Gamer* current = leader_board->head;
-
-    while (current) {
-        if (strcmp(current->name, gamer->name) == 0) {
-            current->score = gamer->score;
-
-            if (prev)
-                prev->next = current->next;
-
-            else leader_board->head = current->next;
-
-            if (current == leader_board->tail)
-                leader_board->tail = prev;
-
-            break;
-        }
-
-        prev = current;
-        current = current->next;
-    }
-
-    prev = NULL;
-    current = leader_board->head;
-
-    while (current && gamer->score < current->score) {
-        prev = current;
-        current = current->next;
-    }
-
-    gamer->next = current;
-
-    if (prev)
-        prev->next = gamer;
-
-    else leader_board->head = gamer;
-
-
-    if (current == NULL)
-        leader_board->tail = gamer;
-
-    Gamer* check = leader_board->head;
-    int count = 0;
-    while (check) {
-        count++;
-        check = check->next;
-    }
-
-    leader_board->length = count;
-}
-
-void free_leader_board(LeaderBoard* leader_board) {
-    Gamer* current = leader_board->head;
-    while (current) {
-        leader_board->head = current->next;
-        track_free((void**)&current);
-        current = leader_board->head;
-    }
-
-    track_free((void**)&leader_board);
+    return lb;
 }

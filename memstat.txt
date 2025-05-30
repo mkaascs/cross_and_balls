@@ -1,4 +1,4 @@
-malloc:131
+malloc:31
 calloc:2
 realloc:0
-free:133
+free:33

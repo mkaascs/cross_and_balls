@@ -7,12 +7,17 @@
 typedef struct Gamer {
     char name[NAME_LENGTH];
     int score;
-    struct Gamer* next;
 } Gamer;
 
+typedef struct GamerNode {
+    Gamer* gamer;
+    int height;
+    struct GamerNode* right;
+    struct GamerNode* left;
+} GamerNode;
+
 typedef struct {
-    Gamer* head;
-    Gamer* tail;
+    GamerNode* root;
     int length;
 } LeaderBoard;
 
