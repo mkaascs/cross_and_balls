@@ -8,6 +8,9 @@
 #include "game/views/assets.h"
 #include "memstat/memstat.h"
 
+#define FIXED_WINDOW_WIDTH 500
+#define FIXED_WINDOW_HEIGHT 650
+
 #define MEMSTAT_FILENAME "memstat.txt"
 #define LEADERBOARD_FILENAME "leaderboard.txt"
 
@@ -39,7 +42,7 @@ int main() {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
-    global_layout = init_window_layout();
+    global_layout = init_window_layout(FIXED_WINDOW_WIDTH, FIXED_WINDOW_HEIGHT);
 
     SDL_Window* window = SDL_CreateWindow("Tic-Tac-Toe",
         SDL_WINDOWPOS_CENTERED,

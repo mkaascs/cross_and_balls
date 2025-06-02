@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "game.h"
 
+#include <stdio.h>
+
 #include "../../../memstat/memstat.h"
 
 #define WIN_PATTERNS_COUNT 8

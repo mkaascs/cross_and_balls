@@ -1,58 +1,45 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef LAYOUT_H
+#define LAYOUT_H
 
 typedef struct {
-    unsigned int cell_size;
-    unsigned int cell_padding;
-    unsigned int cell_left;
-    unsigned int cell_top;
+    float width;
+    float height;
+    float margin_x;
+    float margin_y;
+    float padding;
+} ElementLayout;
 
-    unsigned int restart_button_width;
-    unsigned int restart_button_height;
-    unsigned int restart_button_x;
-    unsigned int restart_button_y;
+typedef struct {
+    ElementLayout cell;
+    ElementLayout restart_button;
 } BoardLayout;
 
 typedef struct {
-    unsigned int logo_x;
-    unsigned int logo_y;
-    unsigned int logo_width;
-    unsigned int logo_height;
-
-    unsigned int button_width;
-    unsigned int button_height;
-
-    unsigned int button_x;
-    unsigned int first_button_y;
+    ElementLayout logo;
+    ElementLayout button;
+    float button_spacing;
 } MenuLayout;
 
 typedef struct {
-    unsigned int font_size;
-    unsigned int player_label_height;
-
-    unsigned int top;
-    unsigned int left;
-
-    unsigned int players_count;
+    float font_size;
+    float row_height;
+    float margin_x;
+    float margin_y;
+    unsigned int max_players;
 } LeaderboardLayout;
 
 typedef struct {
     unsigned int window_width;
     unsigned int window_height;
 
-    unsigned int padding_left;
-    unsigned int padding_top;
-
-    unsigned int close_button_x;
-    unsigned int close_button_y;
-    unsigned int close_button_width;
-    unsigned int close_button_height;
+    ElementLayout close_button;
 
     BoardLayout board;
     MenuLayout menu;
     LeaderboardLayout leaderboard;
 } WindowLayout;
 
-WindowLayout* init_window_layout();
+WindowLayout* init_window_layout(unsigned int width, unsigned int height);
+void update_window_layout(WindowLayout* layout, unsigned int width, unsigned int height);
 
-#endif //CONFIG_H
+#endif // LAYOUT_H

@@ -1,7 +1,7 @@
 #include "ai.h"
 #include <stdlib.h>
 
-#define DIFFICULT 5
+#define DIFFICULT 1
 
 static const uint16_t WIN_PATTERNS[] = {
     0b111000000, 0b000111000, 0b000000111,

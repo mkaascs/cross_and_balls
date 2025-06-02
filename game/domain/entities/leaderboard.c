@@ -102,16 +102,6 @@ static GamerNode* insert_node(GamerNode* node, Gamer* gamer) {
     return balance(node);
 }
 
-static void free_node(GamerNode* node) {
-    if (node == NULL)
-        return;
-
-    free_node(node->left);
-    free_node(node->right);
-    track_free((void**)&node->gamer);
-    track_free((void**)&node);
-}
-
 LeaderBoard* init_leader_board() {
     LeaderBoard* lb = (LeaderBoard*)track_malloc(sizeof(LeaderBoard));
     lb->root = NULL;
@@ -133,6 +123,16 @@ void add_gamer(LeaderBoard* lb, Gamer* gamer) {
 
     lb->root = insert_node(lb->root, new_gamer);
     lb->length++;
+}
+
+static void free_node(GamerNode* node) {
+    if (node == NULL)
+        return;
+
+    free_node(node->left);
+    free_node(node->right);
+    track_free((void**)&node->gamer);
+    track_free((void**)&node);
 }
 
 void free_leader_board(LeaderBoard* lb) {

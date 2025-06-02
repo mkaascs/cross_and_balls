@@ -1,71 +1,70 @@
 #include "layout.h"
+#include <stdlib.h>
 
-#include "../../../memstat/memstat.h"
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-#define DEFAULT_WINDOW_WIDTH 500
-#define DEFAULT_WINDOW_HEIGHT 625
+WindowLayout* init_window_layout(unsigned int width, unsigned int height) {
+    WindowLayout* layout = malloc(sizeof(WindowLayout));
+    if (!layout) return NULL;
 
-#define DEFAULT_PADDING_LEFT 20
-#define DEFAULT_PADDING_TOP 20
+    update_window_layout(layout, width, height);
+    return layout;
+}
 
-#define DEFAULT_CELL_PADDING 20
+void update_window_layout(WindowLayout* layout, unsigned int width, unsigned int height) {
+    if (!layout) return;
 
-#define RESTART_BUTTON_WIDTH 116
-#define RESTART_BUTTON_HEIGHT 42
+    layout->window_width = width;
+    layout->window_height = height;
 
-#define CLOSE_BUTTON_WIDTH 38
-#define CLOSE_BUTTON_HEIGHT 37
+    const float min_dim = MIN(width, height);
+    const float base_unit = min_dim / 20.0f;
+    const float padding = base_unit * 0.5f;
 
-#define LOGO_WIDTH 300
+    // Закрывающая кнопка
+    layout->close_button.width = 1.4f * base_unit;
+    layout->close_button.height = 1.4f * base_unit;
+    layout->close_button.margin_x = padding;
+    layout->close_button.margin_y = padding;
+    layout->close_button.padding = base_unit * 0.05f;
 
-#define LEADERBOARD_FONT_SIZE 20
-#define LEADERBOARD_LABEL_HEIGHT 35
-#define LEADERBOARD_PLAYERS_COUNT 10
+    // Игровое поле
+    const float board_size = min_dim * 0.8f;
+    const float cell_size = board_size / 3.0f;
+    layout->board.cell.width = cell_size;
+    layout->board.cell.height = cell_size;
+    layout->board.cell.margin_x = (width - board_size) / 2;
+    layout->board.cell.margin_y = (height - board_size) / 2 - base_unit * 2;
+    layout->board.cell.padding = cell_size * 0.15f; // 15% от размера ячейки
 
-#define MENU_BUTTON_WIDTH 285
-#define MENU_BUTTON_HEIGHT 45
+    // Кнопка рестарта
+    layout->board.restart_button.width = 4.0f * base_unit;
+    layout->board.restart_button.height = 1.5f * base_unit;
+    layout->board.restart_button.margin_x = (width - 4.0f * base_unit) / 2;
+    layout->board.restart_button.margin_y = layout->board.cell.margin_y + board_size + base_unit;
+    layout->board.restart_button.padding = base_unit * 0.3f;
 
-WindowLayout* init_window_layout() {
-    WindowLayout* size = track_malloc(sizeof(WindowLayout));
+    // Меню
+    layout->menu.logo.width = min_dim * 0.7f;
+    layout->menu.logo.height = layout->menu.logo.width * 0.65f;
+    layout->menu.logo.margin_x = (width - layout->menu.logo.width) / 2;
+    layout->menu.logo.margin_y = base_unit * 3;
+    layout->menu.logo.padding = base_unit * 0.1f;
 
-    size->window_height = DEFAULT_WINDOW_HEIGHT;
-    size->window_width = DEFAULT_WINDOW_WIDTH;
+    layout->menu.button.width = min_dim * 0.55f;
+    layout->menu.button.height = base_unit * 1.8f;
+    layout->menu.button.margin_x = (width - layout->menu.button.width) / 2;
 
-    size->padding_left = DEFAULT_PADDING_LEFT;
-    size->padding_top = DEFAULT_PADDING_TOP;
+    // Позиция первой кнопки
+    const float first_button_y = layout->menu.logo.margin_y + layout->menu.logo.height + base_unit * 2;
+    layout->menu.button.margin_y = first_button_y;
+    layout->menu.button_spacing = base_unit * 1.5f;
 
-    size->board.cell_padding = DEFAULT_CELL_PADDING;
-    size->board.cell_size = DEFAULT_WINDOW_WIDTH > DEFAULT_WINDOW_HEIGHT
-       ? DEFAULT_WINDOW_HEIGHT / 3 - 2 * DEFAULT_PADDING_TOP / 3
-       : DEFAULT_WINDOW_WIDTH / 3 - 2 * DEFAULT_PADDING_LEFT / 3;
-
-    size->board.cell_left = (DEFAULT_WINDOW_WIDTH - size->board.cell_size * 3) / 2;
-    size->board.cell_top = (DEFAULT_WINDOW_HEIGHT - size->board.cell_size * 3) / 2;
-
-    size->board.restart_button_width = RESTART_BUTTON_WIDTH;
-    size->board.restart_button_height = RESTART_BUTTON_HEIGHT;
-    size->board.restart_button_x = (DEFAULT_WINDOW_WIDTH - RESTART_BUTTON_WIDTH) / 2;
-    size->board.restart_button_y = size->board.cell_top + size->board.cell_size * 3 + RESTART_BUTTON_HEIGHT / 2;
-
-    size->close_button_width = CLOSE_BUTTON_WIDTH;
-    size->close_button_height = CLOSE_BUTTON_HEIGHT;
-    size->close_button_x = DEFAULT_PADDING_LEFT;
-    size->close_button_y = DEFAULT_PADDING_TOP;
-
-    size->menu.logo_width = LOGO_WIDTH;
-    size->menu.logo_height = size->menu.logo_width * 5 / 7;
-    size->menu.logo_x = (DEFAULT_WINDOW_WIDTH - LOGO_WIDTH) / 2;
-    size->menu.logo_y = DEFAULT_PADDING_TOP;
-    size->menu.button_width = MENU_BUTTON_WIDTH;
-    size->menu.button_height = MENU_BUTTON_HEIGHT;
-    size->menu.button_x = (size->window_width - size->menu.button_width) / 2;
-    size->menu.first_button_y = size->menu.logo_y + size->menu.logo_height + size->padding_top;
-
-    size->leaderboard.font_size = LEADERBOARD_FONT_SIZE;
-    size->leaderboard.player_label_height = LEADERBOARD_LABEL_HEIGHT;
-
-    size->leaderboard.left = DEFAULT_PADDING_LEFT;
-    size->leaderboard.top = (DEFAULT_WINDOW_HEIGHT - LEADERBOARD_PLAYERS_COUNT * LEADERBOARD_LABEL_HEIGHT) / 2;
-
-    return size;
+    // Таблица лидеров
+    layout->leaderboard.font_size = base_unit * 0.7f;
+    layout->leaderboard.row_height = base_unit * 2.0f;
+    layout->leaderboard.margin_x = (width - min_dim * 0.7f) / 2;
+    layout->leaderboard.margin_y = base_unit * 4;
+    layout->leaderboard.max_players = 8;
 }

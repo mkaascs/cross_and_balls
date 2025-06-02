@@ -5,10 +5,10 @@
 
 void draw_close_button(SDL_Renderer* renderer, WindowLayout layout) {
     SDL_Rect button = {
-        layout.close_button_x,
-        layout.close_button_y,
-        layout.close_button_width,
-        layout.close_button_height
+        layout.close_button.margin_x,
+        layout.close_button.margin_y,
+        layout.close_button.width,
+        layout.close_button.height
     };
 
     SDL_RenderCopy(renderer, get_sprite(SPRITE_CLOSE_BUTTON), NULL, &button);

@@ -4,20 +4,27 @@
 #include "../../../memstat/memstat.h"
 #include "../../ai/ai.h"
 
-static void on_update(const BoardController* this, SDL_Renderer* renderer) {
-    draw_board(renderer, *this->game, this->layout);
-    if (this->game->is_complete) {
-        draw_restart_button(renderer, this->layout);
-        draw_win_way(renderer, this->game->get_win_way(this->game), this->layout);
-    }
-}
-
-static int get_position(BoardLayout layout, int x, int y) {
-    if (x < layout.cell_left || x > 3 * layout.cell_size + layout.cell_left ||
-        y < layout.cell_top || y > 3 * layout.cell_size + layout.cell_top)
+static int get_step_position(const BoardLayout layout, int x, int y) {
+    if (x < layout.cell.margin_x ||
+        x > layout.cell.margin_x + 3 * layout.cell.width ||
+        y < layout.cell.margin_y ||
+        y > layout.cell.margin_y + 3 * layout.cell.height)
         return -1;
 
-    return (y - layout.cell_top) / layout.cell_size * 3 + (x - layout.cell_left) / layout.cell_size;
+
+    int col = (x - layout.cell.margin_x) / layout.cell.width;
+    int row = (y - layout.cell.margin_y) / layout.cell.height;
+
+    if (col < 0 || col > 2 || row < 0 || row > 2)
+        return -1;
+
+
+    return row * 3 + col;
+}
+
+static bool is_on_element_click(ElementLayout element, int x, int y) {
+    return x >= element.margin_x && x <= element.margin_x + element.width &&
+        y >= element.margin_y && y <= element.margin_y + element.height;
 }
 
 static void on_restart_button_click(const BoardController* this) {
@@ -32,35 +39,46 @@ static void on_close_button_click(const BoardController* this) {
 }
 
 static void on_click(const BoardController* this, int x, int y) {
-    if (x >= this->layout.close_button_x && x <= this->layout.close_button_x + this->layout.close_button_width &&
-        y >= this->layout.close_button_y && y <= this->layout.close_button_y + this->layout.close_button_height) {
+    if (is_on_element_click(this->layout.close_button, x, y)) {
         on_close_button_click(this);
         return;
     }
 
-    if (this->game->is_complete && x >= this->layout.board.restart_button_x && x <= this->layout.board.restart_button_x + this->layout.board.restart_button_width &&
-        y >= this->layout.board.restart_button_y && y <= this->layout.board.restart_button_y + this->layout.board.restart_button_height) {
+    if (is_on_element_click(this->layout.board.restart_button, x, y)) {
         on_restart_button_click(this);
         return;
     }
 
-    int position = get_position(this->layout.board, x, y);
-    if (position == -1)
-        return;
+    int position = get_step_position(this->layout.board, x, y);
+    if (position == -1) return;
 
     if (!this->game->make_move(this->game, position))
         return;
 
-    make_move_ai(this->game);
     if (this->game->check_win(this->game)) {
         if (this->game->last_move == Cross)
             this->game->score.cross_score++;
-
-        else if (this->game->last_move == Ball)
+        else
             this->game->score.ball_score++;
+        return;
     }
 
-    else this->game->check_draw(this->game);
+    if (!this->game->is_complete) {
+        make_move_ai(this->game);
+        if (this->game->check_win(this->game)) {
+            if (this->game->last_move == Cross)
+                this->game->score.cross_score++;
+            else
+                this->game->score.ball_score++;
+        }
+    }
+
+    // Проверка ничьи
+    this->game->check_draw(this->game);
+}
+
+static void on_update(const BoardController* this, SDL_Renderer* renderer) {
+    draw_board(renderer, *this->game, this->layout);
 }
 
 BoardController* init_board_controller(WindowLayout layout, Game* game, void (*change_state)(StateScreen)) {
