@@ -77,7 +77,7 @@ static void on_click(const BoardController* this, int x, int y) {
 }
 
 static void on_update(const BoardController* this, SDL_Renderer* renderer) {
-    draw_board(renderer, *this->game, this->layout);
+    draw_board(renderer, *this->game, this->layout, get_current_difficulty() == BOT_DIFFICULTY_SPECIAL_MODE);
 }
 
 BoardController* init_board_controller(WindowLayout layout, Game* game, void (*change_state)(StateScreen)) {

@@ -110,11 +110,15 @@ static void draw_win_way(SDL_Renderer* renderer, uint16_t way, WindowLayout layo
     thickLineRGBA(renderer, x1, y1, x2, y2, thickness, 230, 15, 15, 255);
 }
 
-void draw_board(SDL_Renderer* renderer, Game game, WindowLayout layout) {
+void draw_board(SDL_Renderer* renderer, Game game, WindowLayout layout, bool draw_moves) {
     draw_grid(renderer, layout);
     draw_close_button(renderer, layout);
-    draw_moves_query(renderer, game.crosses, layout);
-    draw_moves_query(renderer, game.balls, layout);
+
+    if (draw_moves) {
+        draw_moves_query(renderer, game.crosses, layout);
+        draw_moves_query(renderer, game.balls, layout);
+    }
+
     draw_score(renderer, game.score, layout);
 
     const float cell_size = layout.board.cell.width;

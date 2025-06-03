@@ -7,6 +7,6 @@
 #include "../layout/layout.h"
 #include "../../domain/entities/game.h"
 
-void draw_board(SDL_Renderer*, Game, WindowLayout);
+void draw_board(SDL_Renderer*, Game, WindowLayout, bool);
 
 #endif //VIEWS_H

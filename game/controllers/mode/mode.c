@@ -29,16 +29,8 @@ static void on_click(const ModeController* this, int x, int y) {
 
     for (int index = 0; index < MODE_BUTTONS_COUNT; index++) {
         if (is_on_element_click(mode_button, x, y)) {
-            if (index == 3) {
-                set_max_moves_count(3);
-                set_difficulty(BOT_DIFFICULTY_MEDIUM);
-            }
-
-            else {
-                set_max_moves_count(9);
-                set_difficulty(BOT_DIFFICULTY_EASY + index);
-            }
-
+            set_max_moves_count(BOT_DIFFICULTY_EASY + index == BOT_DIFFICULTY_SPECIAL_MODE ? 3 : 9);
+            set_difficulty(BOT_DIFFICULTY_EASY + index);
             this->change_state(GAME_SCREEN);
             return;
         }

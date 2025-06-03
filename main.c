@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
+#include "game/ai/ai.h"
 #include "game/controllers/controllers.h"
 #include "game/controllers/states.h"
 #include "game/domain/entities/leaderboard.h"
@@ -41,7 +42,7 @@ static void change_screen(StateScreen screen) {
 }
 
 int main() {
-    srand(time(NULL));
+    ai_init();
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
