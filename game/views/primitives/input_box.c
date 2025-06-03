@@ -12,7 +12,7 @@ void init_input_box(InputBox* box, SDL_Rect rect, TTF_Font* font) {
     SDL_StartTextInput();
 }
 
-void handle_input_box(InputBox* box, SDL_Event* event) {
+void handle_input_box(InputBox* box, SDL_Event* event, char* text) {
     if (!box->active) return;
 
     if (event->type == SDL_TEXTINPUT && box->length < INPUTBOX_MAX_LENGTH) {
@@ -25,6 +25,8 @@ void handle_input_box(InputBox* box, SDL_Event* event) {
             box->text[--box->length] = '\0';
         }
     }
+
+    strncpy(text, box->text, INPUTBOX_MAX_LENGTH);
 }
 
 void render_input_box(InputBox* box, SDL_Renderer* renderer) {

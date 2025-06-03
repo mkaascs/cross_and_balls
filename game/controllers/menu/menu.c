@@ -3,6 +3,8 @@
 #include "../../../memstat/memstat.h"
 #include "../../views/menu/views.h"
 
+char input_box_text[NAME_LENGTH];
+
 static bool is_on_element_click(ElementLayout element, int x, int y) {
     return x >= element.margin_x && x <= element.margin_x + element.width &&
         y >= element.margin_y && y <= element.margin_y + element.height;
@@ -29,12 +31,19 @@ static void on_update(const MenuController* this, SDL_Renderer* renderer) {
     draw_menu(renderer, this->layout);
 }
 
+static void on_text_entered(const MenuController* this, SDL_Event* event) {
+    handle_input_box_event(event, input_box_text);
+}
+
 MenuController* init_menu_controller(WindowLayout layout, void (*change_state)(StateScreen)) {
     MenuController* controller = track_malloc(sizeof(MenuController));
     controller->change_state = change_state;
     controller->layout = layout;
     controller->on_click = on_click;
     controller->on_update = on_update;
+    controller->on_text_entered = on_text_entered;
+
+    init_menu_view(layout);
 
     return controller;
 }

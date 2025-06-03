@@ -23,6 +23,7 @@ typedef struct MenuController {
 
     void (*on_update)(const MenuController*, SDL_Renderer*);
     void (*on_click)(const MenuController*, int, int);
+    void (*on_text_entered)(const MenuController*, SDL_Event*);
 
     void (*change_state)(StateScreen);
 } MenuController;

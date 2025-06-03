@@ -45,6 +45,7 @@ int main() {
     ai_init();
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
+    SDL_StartTextInput();
 
     global_layout = init_window_layout(FIXED_WINDOW_WIDTH, FIXED_WINDOW_HEIGHT);
 
@@ -82,8 +83,7 @@ int main() {
             if (event.type == SDL_QUIT)
                 running = false;
 
-            if (event.type == SDL_MOUSEBUTTONDOWN)
-                current_state->handle_event(current_state, &event);
+            current_state->handle_event(current_state, &event);
         }
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

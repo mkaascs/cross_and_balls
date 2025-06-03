@@ -20,7 +20,7 @@ typedef struct {
 } InputBox;
 
 void init_input_box(InputBox* box, SDL_Rect rect, TTF_Font* font);
-void handle_input_box(InputBox* box, SDL_Event* event);
+void handle_input_box(InputBox* box, SDL_Event* event, char* text);
 void render_input_box(InputBox* box, SDL_Renderer* renderer);
 
 #endif //INPUT_BOX_H
