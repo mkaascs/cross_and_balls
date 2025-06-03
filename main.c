@@ -34,6 +34,9 @@ static void change_screen(StateScreen screen) {
         case LEADERBOARD_SCREEN:
             current_state = init_leaderboard_state(*global_layout, global_leader_board, change_screen);
         break;
+        case MODE_SCREEN:
+            current_state = init_mode_state(*global_layout, change_screen);
+        break;
     }
 }
 

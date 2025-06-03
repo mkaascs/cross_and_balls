@@ -8,6 +8,7 @@
 
 typedef enum {
     MENU_SCREEN,
+    MODE_SCREEN,
     GAME_SCREEN,
     LEADERBOARD_SCREEN
 } StateScreen;
@@ -22,6 +23,7 @@ typedef struct GameState {
 typedef struct BoardController BoardController;
 typedef struct MenuController MenuController;
 typedef struct LeaderboardController LeaderboardController;
+typedef struct ModeController ModeController;
 
 typedef struct GameScreenState {
     GameState base;
@@ -38,8 +40,14 @@ typedef struct LeaderBoardScreenState {
     LeaderboardController* controller;
 } LeaderboardScreenState;
 
+typedef struct ModeScreenState {
+    GameState base;
+    ModeController* controller;
+} ModeScreenState;
+
 GameState* init_game_state(WindowLayout, Game*, void (*)(StateScreen));
 GameState* init_menu_state(WindowLayout, void (*)(StateScreen));
 GameState* init_leaderboard_state(WindowLayout, LeaderBoard*, void (*)(StateScreen));
+GameState* init_mode_state(WindowLayout, void (*)(StateScreen));
 
 #endif //STATES_H

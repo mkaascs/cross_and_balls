@@ -35,13 +35,13 @@ void update_window_layout(WindowLayout* layout, unsigned int width, unsigned int
     layout->board.cell.width = cell_size;
     layout->board.cell.height = cell_size;
     layout->board.cell.margin_x = (width - board_size) / 2;
-    layout->board.cell.margin_y = (height - board_size) / 2 - base_unit * 2;
+    layout->board.cell.margin_y = (height - board_size) / 2 - base_unit;
     layout->board.cell.padding = cell_size * 0.15f; // 15% от размера ячейки
 
     // Кнопка рестарта
-    layout->board.restart_button.width = 4.0f * base_unit;
-    layout->board.restart_button.height = 1.5f * base_unit;
-    layout->board.restart_button.margin_x = (width - 4.0f * base_unit) / 2;
+    layout->board.restart_button.width = 5.5f * base_unit;
+    layout->board.restart_button.height = 1.8f * base_unit;
+    layout->board.restart_button.margin_x = (width - layout->board.restart_button.width) / 2;
     layout->board.restart_button.margin_y = layout->board.cell.margin_y + board_size + base_unit;
     layout->board.restart_button.padding = base_unit * 0.3f;
 
