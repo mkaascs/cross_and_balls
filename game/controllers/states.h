@@ -10,7 +10,8 @@ typedef enum {
     MENU_SCREEN,
     MODE_SCREEN,
     GAME_SCREEN,
-    LEADERBOARD_SCREEN
+    LEADERBOARD_SCREEN,
+    STATE_SCREEN_COUNT
 } StateScreen;
 
 typedef struct GameState {

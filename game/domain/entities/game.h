@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include "../query/moves.h"
 
-#define MAX_MOVES_COUNT 9
-
 typedef enum {
     Ball, Cross
 } Player;
@@ -34,6 +32,7 @@ typedef struct Game {
 } Game;
 
 Game* init_game();
+void set_max_moves_count(int);
 void free_game(Game*);
 
 #endif //GAME_H

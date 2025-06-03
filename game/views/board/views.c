@@ -113,6 +113,8 @@ static void draw_win_way(SDL_Renderer* renderer, uint16_t way, WindowLayout layo
 void draw_board(SDL_Renderer* renderer, Game game, WindowLayout layout) {
     draw_grid(renderer, layout);
     draw_close_button(renderer, layout);
+    draw_moves_query(renderer, game.crosses, layout);
+    draw_moves_query(renderer, game.balls, layout);
     draw_score(renderer, game.score, layout);
 
     const float cell_size = layout.board.cell.width;

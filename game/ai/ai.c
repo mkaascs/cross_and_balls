@@ -1,13 +1,13 @@
 #include "ai.h"
 #include <stdlib.h>
 
-#define DIFFICULT 1
-
 static const uint16_t WIN_PATTERNS[] = {
     0b111000000, 0b000111000, 0b000000111,
     0b100100100, 0b010010010, 0b001001001,
     0b100010001, 0b001010100
 };
+
+static BotDifficulty bot_difficulty = BOT_DIFFICULTY_MEDIUM;
 
 static int find_winning_move(uint16_t player_mask, uint16_t empty_mask) {
     for (int i = 0; i < 8; i++) {
@@ -30,6 +30,14 @@ static bool is_empty(Game* game, int pos) {
     return !(game->crosses_moves & mask) && !(game->balls_moves & mask);
 }
 
+void set_difficulty(BotDifficulty difficulty) {
+    bot_difficulty = difficulty;
+}
+
+BotDifficulty get_current_difficulty() {
+    return bot_difficulty;
+}
+
 void make_move_ai(Game* game) {
     if (game == NULL || game->is_complete)
         return;
@@ -39,13 +47,12 @@ void make_move_ai(Game* game) {
     uint16_t empty = ~(bot_moves | human_moves) & 0x1FF;
 
     int move = -1;
-    bool skip_move = (rand() % DIFFICULT == 0);
 
     move = find_winning_move(bot_moves, empty);
-    if (move >= 0 && !skip_move) { game->make_move(game, move); return; }
+    if (move >= 0) { game->make_move(game, move); return; }
 
     move = find_winning_move(human_moves, empty);
-    if (move >= 0 && !skip_move) { game->make_move(game, move); return; }
+    if (move >= 0) { game->make_move(game, move); return; }
 
     if (is_empty(game, 4)) { game->make_move(game, 4); return; }
 

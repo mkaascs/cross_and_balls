@@ -35,7 +35,7 @@ static void on_close_button_click(const BoardController* this) {
     this->game->score.cross_score = 0;
     this->game->score.ball_score = 0;
     this->game->reset(this->game);
-    this->change_state(MENU_SCREEN);
+    this->change_state(MODE_SCREEN);
 }
 
 static void on_click(const BoardController* this, int x, int y) {
@@ -73,7 +73,6 @@ static void on_click(const BoardController* this, int x, int y) {
         }
     }
 
-    // Проверка ничьи
     this->game->check_draw(this->game);
 }
 

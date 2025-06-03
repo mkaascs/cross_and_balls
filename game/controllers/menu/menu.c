@@ -10,7 +10,7 @@ static bool is_on_element_click(ElementLayout element, int x, int y) {
 
 static void on_click(const MenuController* this, int x, int y) {
     if (is_on_element_click(this->layout.menu.button, x, y)) {
-        this->change_state(GAME_SCREEN);
+        this->change_state(MODE_SCREEN);
         return;
     }
 

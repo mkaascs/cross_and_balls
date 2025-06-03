@@ -7,11 +7,19 @@
 
 #define WIN_PATTERNS_COUNT 8
 
+static int max_moves_count = 9;
+
 static const uint16_t WIN_PATTERNS[WIN_PATTERNS_COUNT] = {
     0b111000000, 0b000111000, 0b000000111,
     0b100100100, 0b010010010, 0b001001001,
     0b100010001, 0b001010100
 };
+
+void set_max_moves_count(int max_moves) {
+    max_moves_count = max_moves < 3
+        ? max_moves_count
+        : max_moves;
+}
 
 static bool check_win(Game* this) {
     if (this == NULL)
@@ -71,12 +79,12 @@ static bool make_move(Game* this, int position) {
     }
 
     this->last_move = !this->last_move;
-    if (this->crosses->length <= MAX_MOVES_COUNT && this->balls->length <= MAX_MOVES_COUNT)
+    if (this->crosses->length <= max_moves_count && this->balls->length <= max_moves_count)
         return true;
 
     MoveElement* last_move;
 
-    if (this->crosses->length > MAX_MOVES_COUNT) {
+    if (this->crosses->length > max_moves_count) {
         last_move = pop(this->crosses);
         this->crosses_moves &= ~(1 << last_move->position);
     }

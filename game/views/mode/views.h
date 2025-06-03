@@ -6,6 +6,8 @@
 #include <SDL2_gfxPrimitives.h>
 #include "../layout/layout.h"
 
+#define MODE_BUTTONS_COUNT 4
+
 void draw_mode_choice(SDL_Renderer*, WindowLayout);
 
 #endif //VIEWS_H

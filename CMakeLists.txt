@@ -51,6 +51,10 @@ add_executable(cross_ball
         game/views/primitives/primitives.c
         game/ai/ai.h
         game/ai/ai.c
+        game/controllers/mode/mode.c
+        game/views/mode/views.h
+        game/views/mode/views.c
+        game/controllers/mode/states.c
 )
 
 # Линкуем библиотеки

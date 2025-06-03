@@ -2,12 +2,11 @@
 #include "../primitives/primitives.h"
 #include "../assets.h"
 
-#define MODE_COUNT 4
 
 void draw_mode_choice(SDL_Renderer* renderer, WindowLayout layout) {
     draw_close_button(renderer, layout);
 
-    for (int index = 0; index < MODE_COUNT; index++) {
+    for (int index = 0; index < MODE_BUTTONS_COUNT; index++) {
         SDL_Rect button = {
             (int)layout.mode.button.margin_x,
             (int)layout.mode.button.margin_y + index * (layout.mode.button.height + layout.mode.button_spacing),

@@ -30,8 +30,8 @@ typedef struct MenuController {
 typedef struct ModeController {
     WindowLayout layout;
 
-    void (*on_update)(const MenuController*, SDL_Renderer*);
-    void (*on_click)(const MenuController*, int, int);
+    void (*on_update)(const ModeController*, SDL_Renderer*);
+    void (*on_click)(const ModeController*, int, int);
 
     void (*change_state)(StateScreen);
 } ModeController;
