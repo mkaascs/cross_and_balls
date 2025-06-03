@@ -21,6 +21,11 @@ typedef struct {
 } MenuLayout;
 
 typedef struct {
+    ElementLayout button;
+    float button_spacing;
+} ModeLayout;
+
+typedef struct {
     float font_size;
     float row_height;
     float margin_x;
@@ -37,6 +42,7 @@ typedef struct {
     BoardLayout board;
     MenuLayout menu;
     LeaderboardLayout leaderboard;
+    ModeLayout mode;
 } WindowLayout;
 
 WindowLayout* init_window_layout(unsigned int width, unsigned int height);

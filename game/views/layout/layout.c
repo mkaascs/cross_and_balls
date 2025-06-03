@@ -57,9 +57,17 @@ void update_window_layout(WindowLayout* layout, unsigned int width, unsigned int
     layout->menu.button.margin_x = (width - layout->menu.button.width) / 2;
 
     // Позиция первой кнопки
-    const float first_button_y = layout->menu.logo.margin_y + layout->menu.logo.height + base_unit * 2;
+    float first_button_y = layout->menu.logo.margin_y + layout->menu.logo.height + base_unit * 2;
     layout->menu.button.margin_y = first_button_y;
     layout->menu.button_spacing = base_unit * 1.5f;
+
+    // Выбор мода/сложности
+    layout->mode.button.width = min_dim * 0.5f;
+    layout->mode.button.height = base_unit * 1.75f;
+    layout->mode.button.margin_x = (width - layout->mode.button.width) / 2;
+    first_button_y = layout->close_button.margin_y + layout->close_button.height + base_unit * 4;
+    layout->mode.button.margin_y = first_button_y;
+    layout->menu.button_spacing = base_unit * 1.25f;
 
     // Таблица лидеров
     layout->leaderboard.font_size = base_unit * 0.7f;
