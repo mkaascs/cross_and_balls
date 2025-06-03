@@ -6,14 +6,14 @@
 
 WindowLayout* init_window_layout(unsigned int width, unsigned int height) {
     WindowLayout* layout = malloc(sizeof(WindowLayout));
-    if (!layout) return NULL;
+    if (layout == NULL) return NULL;
 
     update_window_layout(layout, width, height);
     return layout;
 }
 
 void update_window_layout(WindowLayout* layout, unsigned int width, unsigned int height) {
-    if (!layout) return;
+    if (layout == NULL) return;
 
     layout->window_width = width;
     layout->window_height = height;
@@ -52,14 +52,23 @@ void update_window_layout(WindowLayout* layout, unsigned int width, unsigned int
     layout->menu.logo.margin_y = base_unit * 3;
     layout->menu.logo.padding = base_unit * 0.1f;
 
+    layout->menu.input_box.width = min_dim * 0.55f;
+    layout->menu.input_box.height = base_unit * 1.8f;
+    layout->menu.input_box.margin_x = (width - layout->menu.input_box.width) / 2;
+    layout->menu.font_size = 14;
+
+    // Позиция input box'a
+    const float first_input_box_y = layout->menu.logo.margin_y + layout->menu.logo.height + base_unit * 1.25f;
+    layout->menu.input_box.margin_y = first_input_box_y;
+
     layout->menu.button.width = min_dim * 0.55f;
     layout->menu.button.height = base_unit * 1.8f;
     layout->menu.button.margin_x = (width - layout->menu.button.width) / 2;
 
     // Позиция первой кнопки
-    float first_button_y = layout->menu.logo.margin_y + layout->menu.logo.height + base_unit * 2;
+    float first_button_y = first_input_box_y + layout->menu.input_box.height + base_unit * 1.25f;
     layout->menu.button.margin_y = first_button_y;
-    layout->menu.button_spacing = base_unit * 1.5f;
+    layout->menu.button_spacing = base_unit * 1.25f;
 
     // Выбор мода/сложности
     layout->mode.button.width = min_dim * 0.45f;

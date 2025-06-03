@@ -17,6 +17,8 @@ typedef struct {
 typedef struct {
     ElementLayout logo;
     ElementLayout button;
+    ElementLayout input_box;
+    unsigned int font_size;
     float button_spacing;
 } MenuLayout;
 

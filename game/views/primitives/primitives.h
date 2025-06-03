@@ -5,6 +5,8 @@
 #include <SDL_ttf.h>
 #include "../layout/layout.h"
 
+#define FONT_PATH "assets/fonts/cal-sans.ttf"
+
 void draw_close_button(SDL_Renderer* renderer, WindowLayout layout);
 void draw_text(SDL_Renderer* renderer, const char* text, int x, int y, int font_size, SDL_Color color);
 void draw_text_centred_x(SDL_Renderer* renderer, const char* text, int rect_width, int y, int font_size, SDL_Color);

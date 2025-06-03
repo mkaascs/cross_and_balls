@@ -1,8 +1,6 @@
 #include "primitives.h"
 #include "../assets.h"
 
-#define FONT_PATH ""
-
 void draw_close_button(SDL_Renderer* renderer, WindowLayout layout) {
     SDL_Rect button = {
         layout.close_button.margin_x,
@@ -15,7 +13,7 @@ void draw_close_button(SDL_Renderer* renderer, WindowLayout layout) {
 }
 
 void draw_text(SDL_Renderer* renderer, const char* text, int x, int y, int font_size, SDL_Color color) {
-    TTF_Font* font = TTF_OpenFont("assets/fonts/cal-sans.ttf", font_size);
+    TTF_Font* font = TTF_OpenFont(FONT_PATH, font_size);
     if (font == NULL) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         return;
@@ -40,7 +38,7 @@ void draw_text(SDL_Renderer* renderer, const char* text, int x, int y, int font_
 }
 
 void draw_text_centred_x(SDL_Renderer* renderer, const char* text, int rect_width, int y, int font_size, SDL_Color color) {
-    TTF_Font* font = TTF_OpenFont("assets/fonts/cal-sans.ttf", font_size);
+    TTF_Font* font = TTF_OpenFont(FONT_PATH, font_size);
     if (font == NULL) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         return;
