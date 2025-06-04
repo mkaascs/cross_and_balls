@@ -33,15 +33,14 @@ static void on_click(const MenuController* this, int x, int y) {
 
 static void on_text_input(MenuController* this, const SDL_Event* event) {
     if (!this->input_box.active) return;
+    const int text_length = strlen(this->input_box.text);
 
-    if (event->type == SDL_TEXTINPUT && this->input_box.length < INPUTBOX_MAX_LENGTH) {
+    if (event->type == SDL_TEXTINPUT && text_length < INPUTBOX_MAX_LENGTH)
         strcat(this->input_box.text, event->text.text);
-        this->input_box.length = strlen(this->input_box.text);
-    }
 
     if (event->type == SDL_KEYDOWN)
-        if (event->key.keysym.sym == SDLK_BACKSPACE && this->input_box.length > 0)
-            this->input_box.text[--this->input_box.length] = '\0';
+        if (event->key.keysym.sym == SDLK_BACKSPACE && text_length > 0)
+            this->input_box.text[text_length - 1] = '\0';
 }
 
 static void on_update(const MenuController* this, SDL_Renderer* renderer) {

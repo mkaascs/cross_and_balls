@@ -32,7 +32,7 @@ void render_input_box(InputBox* box, SDL_Renderer* renderer) {
         box->border_color.r, box->border_color.g, box->border_color.b, box->border_color.a);
     SDL_RenderDrawRect(renderer, &box->rect);
 
-    if (box->length > 0) {
+    if (strlen(box->text) > 0) {
         SDL_Surface* surface = TTF_RenderText_Blended(box->font, box->text, box->text_color);
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 

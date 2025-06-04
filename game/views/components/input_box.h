@@ -10,7 +10,6 @@
 
 typedef struct {
     char text[INPUTBOX_MAX_LENGTH + 1];
-    int length;
     bool active;
 
     SDL_Rect rect;
