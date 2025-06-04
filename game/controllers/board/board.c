@@ -18,7 +18,6 @@ static int get_step_position(const BoardLayout layout, int x, int y) {
     if (col < 0 || col > 2 || row < 0 || row > 2)
         return -1;
 
-
     return row * 3 + col;
 }
 

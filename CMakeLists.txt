@@ -57,6 +57,8 @@ add_executable(cross_ball
         game/controllers/mode/states.c
         game/views/primitives/input_box.h
         game/views/primitives/input_box.c
+        game/session/session.h
+        game/session/session.c
 )
 
 # Линкуем библиотеки
