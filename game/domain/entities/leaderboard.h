@@ -25,5 +25,6 @@ LeaderBoard* init_leader_board();
 LeaderBoard* init_leader_board_from_file(FILE*);
 void add_gamer(LeaderBoard*, Gamer*);
 void free_leader_board(LeaderBoard*);
+void save_leader_board_to_file(FILE*, const LeaderBoard*);
 
 #endif //LEADERBOARD_H

@@ -24,9 +24,9 @@ static void destroy(const GameState* state) {
     track_free((void**)&state);
 }
 
-GameState* init_game_state(WindowLayout layout, Game* game, void (*change_state)(StateScreen)) {
+GameState* init_game_state(WindowLayout layout, Game* game, LeaderBoard* leader_board, void (*change_state)(StateScreen)) {
     GameScreenState* state = track_malloc(sizeof(GameScreenState));
-    state->controller = init_board_controller(layout, game, change_state);
+    state->controller = init_board_controller(layout, game, leader_board, change_state);
 
     state->base.handle_event = handle_event;
     state->base.update = update;

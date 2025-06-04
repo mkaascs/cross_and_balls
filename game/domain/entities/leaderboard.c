@@ -163,3 +163,22 @@ LeaderBoard* init_leader_board_from_file(FILE* file) {
 
     return lb;
 }
+
+static void write_node_descending(FILE* file, const GamerNode* node, int* written) {
+    if (node == NULL) return;
+
+    write_node_descending(file, node->right, written);
+
+    fprintf(file, "%s: %d\n", node->gamer->name, node->gamer->score);
+    (*written)++;
+
+    write_node_descending(file, node->left, written);
+}
+
+void save_leader_board_to_file(FILE* file, const LeaderBoard* board) {
+    if (file == NULL || board == NULL || board->root == NULL)
+        return;
+
+    int written = 0;
+    write_node_descending(file, board->root, &written);
+}

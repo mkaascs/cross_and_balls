@@ -46,7 +46,7 @@ typedef struct ModeScreenState {
     ModeController* controller;
 } ModeScreenState;
 
-GameState* init_game_state(WindowLayout, Game*, void (*)(StateScreen));
+GameState* init_game_state(WindowLayout, Game*, LeaderBoard*, void (*)(StateScreen));
 GameState* init_menu_state(WindowLayout, void (*)(StateScreen));
 GameState* init_leaderboard_state(WindowLayout, LeaderBoard*, void (*)(StateScreen));
 GameState* init_mode_state(WindowLayout, void (*)(StateScreen));

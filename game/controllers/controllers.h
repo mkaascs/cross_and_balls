@@ -11,6 +11,7 @@
 
 typedef struct BoardController {
     Game* game;
+    LeaderBoard* leader_board;
     WindowLayout layout;
 
     void (*on_update)(const BoardController*, SDL_Renderer*);
@@ -49,7 +50,7 @@ typedef struct LeaderboardController {
     void (*change_state)(StateScreen);
 } LeaderboardController;
 
-BoardController* init_board_controller(WindowLayout, Game*, void (*)(StateScreen));
+BoardController* init_board_controller(WindowLayout, Game*, LeaderBoard*, void (*)(StateScreen));
 MenuController* init_menu_controller(WindowLayout, void (*)(StateScreen));
 ModeController* init_mode_controller(WindowLayout, void (*)(StateScreen));
 LeaderboardController* init_leaderboard_controller(WindowLayout, LeaderBoard*, void (*)(StateScreen));

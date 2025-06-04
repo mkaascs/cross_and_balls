@@ -57,8 +57,10 @@ MenuController* init_menu_controller(WindowLayout layout, void (*change_state)(S
 
     init_input_box(&controller->input_box, layout);
     GameSession* game_session = get_current_session();
-    if (strlen(game_session->gamer_name) > 0)
+    if (strlen(game_session->gamer_name) > 0) {
         strncpy(controller->input_box.text, game_session->gamer_name, NAME_LENGTH);
+        controller->input_box.text[NAME_LENGTH - 1] = '\0';
+    }
 
     return controller;
 }

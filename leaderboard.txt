@@ -1,11 +1,4 @@
-Maxim: 5
-AndrewBo: 9
 Dima: 0
-HaZOV: 231
-makas: 290
-a: 4
-b: 2
-c: 3
-lord: 1
-cross: 15
-ball: 13
+Maxim: 5
+HaZOV: 6
+AndrewBo: 9

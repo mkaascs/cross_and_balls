@@ -30,7 +30,7 @@ static void change_screen(StateScreen screen) {
             current_state = init_menu_state(*global_layout, change_screen);
         break;
         case GAME_SCREEN:
-            current_state = init_game_state(*global_layout, global_game, change_screen);
+            current_state = init_game_state(*global_layout, global_game, global_leader_board, change_screen);
         break;
         case LEADERBOARD_SCREEN:
             current_state = init_leaderboard_state(*global_layout, global_leader_board, change_screen);
@@ -38,6 +38,7 @@ static void change_screen(StateScreen screen) {
         case MODE_SCREEN:
             current_state = init_mode_state(*global_layout, change_screen);
         break;
+        default: ;
     }
 }
 
@@ -71,8 +72,8 @@ int main() {
 
     FILE* leader_board_file = fopen(LEADERBOARD_FILENAME, "r");
     global_leader_board = init_leader_board_from_file(leader_board_file);
-
     fclose(leader_board_file);
+
     current_state = init_menu_state(*global_layout, change_screen);
 
     bool running = true;
@@ -100,6 +101,10 @@ int main() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    leader_board_file = fopen(LEADERBOARD_FILENAME, "w");
+    save_leader_board_to_file(leader_board_file, global_leader_board);
+    fclose(leader_board_file);
 
     current_state->destroy(current_state);
     track_free((void**)&global_layout);
