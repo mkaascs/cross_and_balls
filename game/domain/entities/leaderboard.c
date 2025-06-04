@@ -67,19 +67,52 @@ static GamerNode* balance(GamerNode* node) {
     return node;
 }
 
-static GamerNode* find_and_update(GamerNode* node, Gamer* gamer) {
+static GamerNode* remove_node(GamerNode* node, const char* name, int* removed_score) {
+    if (node == NULL) return NULL;
+
+    int cmp = strcmp(name, node->gamer->name);
+
+    if (cmp < 0)
+        node->left = remove_node(node->left, name, removed_score);
+
+    else if (cmp > 0)
+        node->right = remove_node(node->right, name, removed_score);
+
+    else {
+        *removed_score = node->gamer->score;
+
+        if (node->left == NULL || node->right == NULL) {
+            GamerNode* temp = node->left ? node->left : node->right;
+            track_free((void**)&node->gamer);
+            track_free((void**)&node);
+            return temp;
+        }
+
+        GamerNode* temp = node->left;
+        while (temp->right != NULL)
+            temp = temp->right;
+
+        strncpy(node->gamer->name, temp->gamer->name, NAME_LENGTH);
+        node->gamer->score = temp->gamer->score;
+
+        node->left = remove_node(node->left, temp->gamer->name, removed_score);
+    }
+
+    return balance(node);
+}
+
+static GamerNode* find(GamerNode* node, Gamer* gamer) {
     if (node == NULL)
         return NULL;
 
     int cmp = strcmp(gamer->name, node->gamer->name);
     if (cmp == 0) {
-        node->gamer->score = gamer->score;
         return node;
     }
 
-    GamerNode* found = find_and_update(node->left, gamer);
+    GamerNode* found = find(node->left, gamer);
     if (found == NULL)
-        found = find_and_update(node->right, gamer);
+        found = find(node->right, gamer);
 
     return found;
 }
@@ -113,13 +146,17 @@ void add_gamer(LeaderBoard* lb, Gamer* gamer) {
     if (lb == NULL || gamer == NULL)
         return;
 
-    GamerNode* updated = find_and_update(lb->root, gamer);
-    if (updated != NULL)
-        return;
+    int existing_score = 0;
+    GamerNode* before = find(lb->root, gamer);
+    if (before != NULL) {
+        lb->root = remove_node(lb->root, gamer->name, &existing_score);
+        lb->length--;
+    }
 
     Gamer* new_gamer = (Gamer*)track_malloc(sizeof(Gamer));
     strncpy(new_gamer->name, gamer->name, NAME_LENGTH);
-    new_gamer->score = gamer->score;
+    new_gamer->name[NAME_LENGTH - 1] = '\0';
+    new_gamer->score = gamer->score + existing_score;
 
     lb->root = insert_node(lb->root, new_gamer);
     lb->length++;

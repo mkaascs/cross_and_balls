@@ -30,8 +30,11 @@ static void update_leaderboard(LeaderBoard* leader_board, int score) {
     Gamer gamer;
     strncpy(gamer.name, session->gamer_name, NAME_LENGTH);
     gamer.name[NAME_LENGTH - 1] = '\0';
-    gamer.score = score;
 
+    int factor = 20 * (get_current_difficulty() - BOT_DIFFICULTY_EASY);
+    factor = factor == 0 ? 1 : factor;
+
+    gamer.score = factor * score;
     add_gamer(leader_board, &gamer);
 }
 

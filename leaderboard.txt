@@ -1,4 +1,4 @@
 Dima: 0
-Maxim: 5
-HaZOV: 6
-AndrewBo: 9
+AndrewBo: 62
+Maxim: 245
+HaZOV: 485
