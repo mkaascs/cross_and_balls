@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include <SDL_ttf.h>
 #include <stdbool.h>
+#include "../layout/layout.h"
 
 #define INPUTBOX_MAX_LENGTH 32
 
@@ -19,8 +20,7 @@ typedef struct {
     SDL_Color border_color;
 } InputBox;
 
-void init_input_box(InputBox* box, SDL_Rect rect, TTF_Font* font);
-void handle_input_box(InputBox* box, SDL_Event* event, char* text);
+void init_input_box(InputBox* box, WindowLayout layout);
 void render_input_box(InputBox* box, SDL_Renderer* renderer);
 
 #endif //INPUT_BOX_H

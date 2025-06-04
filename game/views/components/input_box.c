@@ -1,32 +1,26 @@
 #include "input_box.h"
+#include "../primitives/primitives.h"
+
 #include <string.h>
 
-void init_input_box(InputBox* box, SDL_Rect rect, TTF_Font* font) {
+void init_input_box(InputBox* box, WindowLayout layout) {
+    SDL_Rect input_box_rect = {
+        (int)layout.menu.input_box.margin_x,
+        (int)layout.menu.input_box.margin_y,
+        (int)layout.menu.input_box.width,
+        (int)layout.menu.input_box.height
+    };
+
+    TTF_Font* font = TTF_OpenFont(FONT_PATH, layout.menu.font_size);
+
     memset(box, 0, sizeof(InputBox));
-    box->rect = rect;
+    box->rect = input_box_rect;
     box->font = font;
     box->text_color = (SDL_Color){0, 0, 0, 255};
     box->bg_color = (SDL_Color){255, 255, 255, 255};
     box->border_color = (SDL_Color){100, 100, 100, 255};
     box->active = true;
     SDL_StartTextInput();
-}
-
-void handle_input_box(InputBox* box, SDL_Event* event, char* text) {
-    if (!box->active) return;
-
-    if (event->type == SDL_TEXTINPUT && box->length < INPUTBOX_MAX_LENGTH) {
-        strcat(box->text, event->text.text);
-        box->length = strlen(box->text);
-    }
-
-    if (event->type == SDL_KEYDOWN) {
-        if (event->key.keysym.sym == SDLK_BACKSPACE && box->length > 0) {
-            box->text[--box->length] = '\0';
-        }
-    }
-
-    strncpy(text, box->text, INPUTBOX_MAX_LENGTH);
 }
 
 void render_input_box(InputBox* box, SDL_Renderer* renderer) {

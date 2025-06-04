@@ -9,7 +9,7 @@ static void handle_event(const GameState* state, SDL_Event* event) {
         menu_state->controller->on_click(menu_state->controller, event->button.x, event->button.y);
 
     if (event->type == SDL_TEXTINPUT || event->type == SDL_KEYDOWN)
-        menu_state->controller->on_text_entered(menu_state->controller, event);
+        menu_state->controller->on_text_input(menu_state->controller, event);
 }
 
 static void update(const GameState* state) {}

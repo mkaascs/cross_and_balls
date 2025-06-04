@@ -55,8 +55,8 @@ add_executable(cross_ball
         game/views/mode/views.h
         game/views/mode/views.c
         game/controllers/mode/states.c
-        game/views/primitives/input_box.h
-        game/views/primitives/input_box.c
+        game/views/components/input_box.h
+        game/views/components/input_box.c
         game/session/session.h
         game/session/session.c
 )

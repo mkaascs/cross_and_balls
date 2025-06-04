@@ -7,6 +7,7 @@
 #include "../domain/entities/game.h"
 #include "../domain/entities/leaderboard.h"
 #include "../views/layout/layout.h"
+#include "../views/components/input_box.h"
 
 typedef struct BoardController {
     Game* game;
@@ -20,10 +21,11 @@ typedef struct BoardController {
 
 typedef struct MenuController {
     WindowLayout layout;
+    InputBox input_box;
 
     void (*on_update)(const MenuController*, SDL_Renderer*);
     void (*on_click)(const MenuController*, int, int);
-    void (*on_text_entered)(const MenuController*, SDL_Event*);
+    void (*on_text_input)(MenuController*, const SDL_Event*);
 
     void (*change_state)(StateScreen);
 } MenuController;
