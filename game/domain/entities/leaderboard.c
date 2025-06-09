@@ -70,32 +70,29 @@ static GamerNode* balance(GamerNode* node) {
 static GamerNode* remove_node(GamerNode* node, const char* name, int* removed_score) {
     if (node == NULL) return NULL;
 
-    int cmp = strcmp(name, node->gamer->name);
-
-    if (cmp < 0)
-        node->left = remove_node(node->left, name, removed_score);
-
-    else if (cmp > 0)
-        node->right = remove_node(node->right, name, removed_score);
-
-    else {
+    if (strcmp(name, node->gamer->name) == 0) {
         *removed_score = node->gamer->score;
 
         if (node->left == NULL || node->right == NULL) {
-            GamerNode* temp = node->left ? node->left : node->right;
+            GamerNode* child = node->left ? node->left : node->right;
             track_free((void**)&node->gamer);
             track_free((void**)&node);
-            return temp;
+            return child;
         }
 
-        GamerNode* temp = node->left;
-        while (temp->right != NULL)
-            temp = temp->right;
+        GamerNode* max_in_left = node->left;
+        while (max_in_left->right)
+            max_in_left = max_in_left->right;
 
-        strncpy(node->gamer->name, temp->gamer->name, NAME_LENGTH);
-        node->gamer->score = temp->gamer->score;
+        strncpy(node->gamer->name, max_in_left->gamer->name, NAME_LENGTH);
+        node->gamer->score = max_in_left->gamer->score;
 
-        node->left = remove_node(node->left, temp->gamer->name, removed_score);
+        node->left = remove_node(node->left, max_in_left->gamer->name, removed_score);
+    }
+
+    else {
+        node->left  = remove_node(node->left, name, removed_score);
+        node->right = remove_node(node->right, name, removed_score);
     }
 
     return balance(node);
