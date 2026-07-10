@@ -1,6 +1,9 @@
+mkaascs: 0
 Dima: 0
 Z: 2
 A N I K I: 3
+AndewBo: 20
+Vlad: 40
 HaZOV: 485
 Maxim: 1102
-AndrewBo: 1162
+AndrewBo: 1224
